@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "../ui/input";
+
 import { Search } from "lucide-react";
 import { Heart } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
@@ -28,10 +28,8 @@ const Header = () => {
         <ShoppingCart className="text-white" />
 
         <div>
-          <Button variant={"outline"}>Бүртгүүлэх</Button>
-          <Button variant={"myBtn"} className="ml-2">
-            Нэвтрэх
-          </Button>
+          <Button variant={"outline"}>бүртгүүлэх</Button>
+          <Button variant={"myBtn"}>Нэвтрэх</Button>
         </div>
       </div>
     </section>

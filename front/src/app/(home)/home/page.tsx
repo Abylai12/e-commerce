@@ -1,6 +1,7 @@
 "use client";
 
 import Header from "@/components/header/header";
+import Login from "@/components/login/login";
 import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-context-menu";
 import Image from "next/image";
@@ -14,5 +15,9 @@ export default function Home() {
   const plus = () => {
     setCount(count + 1);
   };
-  return <div className=""></div>;
+  return (
+    <div className="">
+      <Login />
+    </div>
+  );
 }
