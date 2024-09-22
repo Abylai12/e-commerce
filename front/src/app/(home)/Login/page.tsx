@@ -7,7 +7,7 @@ import { useState } from "react";
 export default function Home() {
   return (
     <div className="">
-      <Login isLog="hidden" />
+      <Login isLog="hidden" isLogUp="" />
     </div>
   );
 }

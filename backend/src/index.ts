@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import authRoute from "./routes/authRoute";
 import { connectDB } from "./config/db";
+import cors from "cors";
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ const MONGO_URI = process.env.MONGO_URI || "";
 const app = express();
 
 // middlewares
+app.use(cors());
 app.use(express.json());
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome E-commerce API Server");

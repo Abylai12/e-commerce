@@ -4,7 +4,7 @@ import React from "react";
 const Logup = () => {
   return (
     <div>
-      <Login isLog="" />
+      <Login isLog="" isLogUp="hidden" />
     </div>
   );
 };

@@ -14,15 +14,16 @@ export const login = async (req: Request, res: Response) => {
 
 export const logup = async (req: Request, res: Response) => {
   try {
-    const { email, name, password } = req.body;
-    if (!name || !email || !password) {
+    const { email, firstName, lastName, password } = req.body;
+    console.log(email);
+    if (!firstName || !lastName || !email || !password) {
       res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
     const createdUser = await User.create({
-      name,
+      firstName,
+      lastName,
       email,
       password,
-      phoneNumber: "",
     });
 
     res.status(200).json({ message: "success", user: createdUser });
