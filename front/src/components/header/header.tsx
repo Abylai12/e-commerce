@@ -28,7 +28,9 @@ const Header = () => {
         <ShoppingCart className="text-white" />
 
         <div>
-          <Button variant={"outline"}>бүртгүүлэх</Button>
+          <Button variant={"outline"} className="mr-2">
+            бүртгүүлэх
+          </Button>
           <Button variant={"myBtn"}>Нэвтрэх</Button>
         </div>
       </div>

@@ -19,6 +19,9 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+.heightcalc {
+  height: calc(100vh - 385px);
+}
 
 @layer utilities {
   .text-balance {
