@@ -5,11 +5,11 @@ import jwt from "jsonwebtoken";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-
+  console.log("user", email);
   try {
     const user = await User.findOne({ email });
-    console.log("user", user);
-    if (user) {
+
+    if (!user) {
       res.status(404).json({ message: "Not found user" });
     } else {
       const isCheck = bcrypt.compareSync(password, user.password);
@@ -32,15 +32,15 @@ export const logup = async (req: Request, res: Response) => {
     const { email, firstName, lastName, password } = req.body;
 
     if (!firstName || !lastName || !email || !password) {
-      res.status(400).json({ message: " Хоосон утга байж болохгүй" });
+      return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
-    const hashedPassword = bcrypt.hashSync(password, 10);
+
     // console.log("first", hashedPassword);
     const createdUser = await User.create({
       firstName,
       lastName,
       email,
-      password: hashedPassword,
+      password,
     });
 
     res.status(200).json({ message: "success", user: createdUser });

@@ -38,25 +38,25 @@ const Login = ({
   const postUserData = async () => {
     try {
       const { firstName, repassword, lastName, email, password } = userForm;
-      if (password === repassword) {
-        const newForm = { firstName, lastName, email, password };
-        const res = await fetch("http://localhost:8000/api/v1/auth/logup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newForm),
-        });
-        console.log("object", newForm);
-        if (res.ok) {
-          const data = await res.json();
-          console.log("Customer created successfully:", data);
-          router.push("/Login");
-        } else {
-          console.error("Failed to create customer:", res.statusText);
-        }
+      if (password !== repassword) {
+        return console.log("password don't match");
+      }
+
+      const newForm = { firstName, lastName, email, password };
+      const res = await fetch("http://localhost:8000/api/v1/auth/logup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newForm),
+      });
+      console.log("object", newForm);
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Customer created successfully:", data);
+        router.push("/Login");
       } else {
-        console.log("password don't match");
+        console.error("Failed to create customer:", res.statusText);
       }
     } catch (error) {
       console.log("error", error);
@@ -77,7 +77,7 @@ const Login = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ user }),
+        body: JSON.stringify(user),
       });
       console.log("first");
       if (res.status === 404) {
@@ -85,10 +85,8 @@ const Login = ({
       }
       if (res.status === 200) {
         const { token } = await res.json();
-        console.log("User successfully signed in");
+        console.log("User successfully signed in", token);
         localStorage.setItem("token", token);
-
-        router.push("/");
       } else {
         console.error("Failed customer:");
       }
