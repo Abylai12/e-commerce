@@ -4,8 +4,15 @@ import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
+interface IUser {
+  firstName: String;
+  lastName: String;
+  email: String;
+  password: String;
+  repassword: String;
+}
 const Login = ({
   isLog,
   isLogUp,
@@ -13,14 +20,7 @@ const Login = ({
   isLog: string | undefined;
   isLogUp: string | undefined;
 }) => {
-  interface IUser {
-    firstName: String;
-    lastName: String;
-    email: String;
-    password: String;
-    repassword: String;
-  }
-
+  const router = useRouter();
   const [userForm, setUserForm] = useState<IUser>({
     firstName: "",
     lastName: "",
@@ -51,6 +51,7 @@ const Login = ({
         if (res.ok) {
           const data = await res.json();
           console.log("Customer created successfully:", data);
+          router.push("/Login");
         } else {
           console.error("Failed to create customer:", res.statusText);
         }
@@ -61,8 +62,46 @@ const Login = ({
       console.log("error", error);
     }
   };
+
+  const getCurrentUser = async () => {
+    try {
+      const { email, password } = userForm;
+      const user = {
+        email,
+        password,
+      };
+      console.log("user", user);
+
+      const res = await fetch("http://localhost:8000/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user }),
+      });
+      console.log("first");
+      if (res.status === 404) {
+        console.log("burtgelgui hereglegsh bn");
+      }
+      if (res.status === 200) {
+        const { token } = await res.json();
+        console.log("User successfully signed in");
+        localStorage.setItem("token", token);
+
+        router.push("/");
+      } else {
+        console.error("Failed customer:");
+      }
+    } catch (error) {
+      console.log(error);
+      console.log("Failed to sign in. Please try again.");
+    }
+  };
   const handleLogUp = () => {
     postUserData();
+  };
+  const handleLogIn = () => {
+    getCurrentUser();
   };
 
   return (
@@ -112,7 +151,11 @@ const Login = ({
           >
             Үүсгэх
           </Button>
-          <Button variant={"myBtn"} className={`${isLogUp} w-full`}>
+          <Button
+            variant={"myBtn"}
+            className={`${isLogUp} w-full`}
+            onClick={handleLogIn}
+          >
             Нэвтрэх
           </Button>
           <Link href={"/"} className={`${isLogUp} hover:underline mb-2`}>

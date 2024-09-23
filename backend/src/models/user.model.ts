@@ -5,7 +5,7 @@ interface IUser {
   firstName: String;
   lastName: String;
   email: String;
-  password: String;
+  password: string;
   role: String;
   phoneNumber?: String;
   profile_img?: {
