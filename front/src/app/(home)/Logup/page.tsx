@@ -1,10 +1,16 @@
+"use client";
+
 import Login from "@/components/login/login";
-import React from "react";
+import LogUp from "@/components/login/logUp";
+import { ProfileContext } from "@/context/profile-context";
+import React, { useContext } from "react";
 
 const Logup = () => {
+  const { handleLogForm } = useContext(ProfileContext);
+  const handleLogUp = () => {};
   return (
     <div>
-      <Login isLog="" isLogUp="hidden" />
+      <LogUp handleLogForm={handleLogForm} handleLogUp={handleLogUp} />
     </div>
   );
 };

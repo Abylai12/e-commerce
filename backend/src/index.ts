@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import authRoute from "./routes/authRoute";
 import { connectDB } from "./config/db";
 import cors from "cors";
+import { Resend } from "resend";
+import { generateTemplate } from "./utils/generateTemplate";
 
 dotenv.config();
 
@@ -14,7 +16,22 @@ const app = express();
 // middlewares
 app.use(cors());
 app.use(express.json());
-app.get("/", (req: Request, res: Response) => {
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+app.get("/", async (req: Request, res: Response) => {
+  const rndOtp = Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(4, "0");
+  const { data, error } = await resend.emails.send({
+    from: "Acme <onboarding@resend.dev>",
+    to: ["abilay1208@gmail.com"],
+    subject: "hello world",
+    html: generateTemplate(rndOtp),
+  });
+  if (error) {
+    console.error("email_err", { error });
+  }
   res.send("Welcome E-commerce API Server");
   //localhost:8000/
 });

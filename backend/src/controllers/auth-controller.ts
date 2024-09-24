@@ -10,16 +10,20 @@ export const login = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      res.status(404).json({ message: "Not found user" });
+      res.status(400).json({ message: "Not found user" });
     } else {
       const isCheck = bcrypt.compareSync(password, user.password);
       if (!isCheck) {
         res.status(400).json({ message: "Not match user email or password" });
       } else {
-        const token = jwt.sign({ id: user.id }, "JWT_TOKEN_PASS1234", {
-          expiresIn: "1h",
-        });
-        res.status(200).json({ message: "success", token });
+        const token = jwt.sign(
+          { id: user.id },
+          process.env.JWT_TOKEN_KEY || "",
+          {
+            expiresIn: "1h",
+          }
+        );
+        res.status(200).json({ message: "success", token, user });
       }
     }
   } catch (error) {
