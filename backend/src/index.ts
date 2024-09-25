@@ -5,7 +5,6 @@ import catRoute from "./routes/categoryRoute";
 import productRoute from "./routes/productRoute";
 import { connectDB } from "./config/db";
 import cors from "cors";
-import { Resend } from "resend";
 import nodemailer from "nodemailer";
 
 dotenv.config();
@@ -18,8 +17,6 @@ const app = express();
 // middlewares
 app.use(cors());
 app.use(express.json());
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.get("/", async (req: Request, res: Response) => {
   const transporter = nodemailer.createTransport({

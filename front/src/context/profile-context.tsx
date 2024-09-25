@@ -90,15 +90,15 @@ export const ProfileProvider = ({
     }
   };
   const verifyUserEmail = async () => {
+    const { email } = userForm;
     try {
-      const res = await axios.post(`${apiURL}/verify/email`, userForm);
+      const res = await axios.post(`${apiURL}/verify/email`, email);
       if (res.status === 400) {
         console.log("burtgelgui hereglegsh bn");
       }
       if (res.status === 200) {
-        const { email } = res.data;
-        console.log("burtgeltei herel=glesh bn");
-        // router.push("/dashboard");
+        const { email, otp } = res.data;
+        console.log("burtgeltei hereglegsh bn", email, otp);
       } else {
         console.error("Failed customer:");
       }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Search } from "lucide-react";
 import { Heart } from "lucide-react";
@@ -10,10 +10,11 @@ import { useRouter } from "next/navigation";
 import { UserPen } from "lucide-react";
 
 const Header = () => {
-  const token = localStorage.getItem("token");
-  console.log("token", token);
+  const [token, setToken] = useState<boolean>(true);
+  // const token = localStorage.getItem("token");
+  // console.log("token", token);
   const router = useRouter();
-  useEffect(() => {}, []);
+  // useEffect(() => {}, []);
   return (
     <section className="flex bg-black px-6 py-4 justify-between">
       <div className="flex items-center gap-8">

@@ -1,13 +1,15 @@
-import ForgetPass from "@/components/login/forgetPass";
+import ForgetPass from "@/components/login/sendEmail";
 import { ProfileContext } from "@/context/profile-context";
 import React, { useContext } from "react";
 
 const ForgetPassword = () => {
-  const { handleLogForm } = useContext(ProfileContext);
-  const handleLogIn = () => {};
+  const { handleLogForm, verifyUserEmail } = useContext(ProfileContext);
+  const handleClick = () => {
+    verifyUserEmail();
+  };
   return (
     <div>
-      <ForgetPass handleLogForm={handleLogForm} handleLogIn={handleLogIn} />
+      <ForgetPass handleLogForm={handleLogForm} handleClick={handleClick} />
     </div>
   );
 };

@@ -56,7 +56,9 @@ export const verifyUserEmail = async (req: Request, res: Response) => {
     if (!user) {
       res.status(400).json({ message: "Not found user" });
     } else {
-      const rndOtp = Math.floor(Math.random() * 1000).toString();
+      const rndOtp = Math.floor(Math.random() * 1000)
+        .toString()
+        .padStart(4, "0");
       const { email } = user;
       generateGmail(email.toString(), rndOtp);
       res.status(200).json({ message: "success", email, rndOtp });
