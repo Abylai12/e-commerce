@@ -1,11 +1,19 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 
 import { Search } from "lucide-react";
 import { Heart } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { UserPen } from "lucide-react";
 
 const Header = () => {
+  const token = localStorage.getItem("token");
+  console.log("token", token);
+  const router = useRouter();
+  useEffect(() => {}, []);
   return (
     <section className="flex bg-black px-6 py-4 justify-between">
       <div className="flex items-center gap-8">
@@ -27,12 +35,24 @@ const Header = () => {
         <Heart className="text-white" />
         <ShoppingCart className="text-white" />
 
-        <div>
-          <Button variant={"outline"} className="mr-2">
-            бүртгүүлэх
-          </Button>
-          <Button variant={"myBtn"}>Нэвтрэх</Button>
-        </div>
+        {!token ? (
+          <div>
+            <Button
+              variant={"outline"}
+              className="mr-2"
+              onClick={() => router.push("/Logup")}
+            >
+              бүртгүүлэх
+            </Button>
+            <Button variant={"myBtn"} onClick={() => router.push("/Login")}>
+              Нэвтрэх
+            </Button>
+          </div>
+        ) : (
+          <button>
+            <UserPen className="text-white" />
+          </button>
+        )}
       </div>
     </section>
   );

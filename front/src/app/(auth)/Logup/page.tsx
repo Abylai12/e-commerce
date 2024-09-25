@@ -6,8 +6,10 @@ import { ProfileContext } from "@/context/profile-context";
 import React, { useContext } from "react";
 
 const Logup = () => {
-  const { handleLogForm } = useContext(ProfileContext);
-  const handleLogUp = () => {};
+  const { handleLogForm, postUserData } = useContext(ProfileContext);
+  const handleLogUp = () => {
+    postUserData();
+  };
   return (
     <div>
       <LogUp handleLogForm={handleLogForm} handleLogUp={handleLogUp} />

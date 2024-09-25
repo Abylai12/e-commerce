@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import { generateToken } from "../utils/generateToken";
+import { generateGmail } from "../utils/sentGmail";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -16,13 +17,7 @@ export const login = async (req: Request, res: Response) => {
       if (!isCheck) {
         res.status(400).json({ message: "Not match user email or password" });
       } else {
-        const token = jwt.sign(
-          { id: user.id },
-          process.env.JWT_TOKEN_KEY || "",
-          {
-            expiresIn: "1h",
-          }
-        );
+        const token = generateToken({ id: user.id });
         res.status(200).json({ message: "success", token, user });
       }
     }
@@ -50,5 +45,23 @@ export const logup = async (req: Request, res: Response) => {
     res.status(200).json({ message: "success", user: createdUser });
   } catch (error) {
     res.status(500).json({ message: error });
+  }
+};
+
+export const verifyUserEmail = async (req: Request, res: Response) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    console.log("user", email);
+    if (!user) {
+      res.status(400).json({ message: "Not found user" });
+    } else {
+      const rndOtp = Math.floor(Math.random() * 1000).toString();
+      const { email } = user;
+      generateGmail(email.toString(), rndOtp);
+      res.status(200).json({ message: "success", email, rndOtp });
+    }
+  } catch (error) {
+    res.status(401).json({ error });
   }
 };

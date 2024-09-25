@@ -6,8 +6,11 @@ import { ProfileContext } from "@/context/profile-context";
 import { useContext, useState } from "react";
 
 export default function Home() {
-  const { handleLogForm } = useContext(ProfileContext);
-  const handleLogIn = () => {};
+  const { handleLogForm, getCurrentUser } = useContext(ProfileContext);
+  const handleLogIn = () => {
+    getCurrentUser();
+  };
+  localStorage.removeItem("token");
   return (
     <div>
       <Login handleLogForm={handleLogForm} handleLogIn={handleLogIn} />

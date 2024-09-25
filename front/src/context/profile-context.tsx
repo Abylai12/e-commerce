@@ -24,6 +24,7 @@ export const ProfileContext = createContext({
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
   getCurrentUser: () => {},
   postUserData: () => {},
+  verifyUserEmail: () => {},
 });
 
 export const ProfileProvider = ({
@@ -52,12 +53,10 @@ export const ProfileProvider = ({
       if (password !== repassword) {
         return console.log("password don't match");
       }
-
+      console.log("object", firstName);
       const newForm = { firstName, lastName, email, password };
-      const res = await axios.post(`${apiURL}/logup`, {
-        newForm,
-      });
-      console.log("object", newForm);
+      const res = await axios.post(`${apiURL}/logup`, newForm);
+
       if (res.status === 200) {
         toast.success("Customer created successfully:");
         router.push("/Login");
@@ -80,7 +79,26 @@ export const ProfileProvider = ({
       if (res.status === 200) {
         const { token, user } = res.data;
         console.log("User successfully signed in", token);
+        router.push("/dashboard");
         localStorage.setItem("token", token);
+      } else {
+        console.error("Failed customer:");
+      }
+    } catch (error) {
+      console.log(error);
+      console.log("Failed to sign in. Please try again.");
+    }
+  };
+  const verifyUserEmail = async () => {
+    try {
+      const res = await axios.post(`${apiURL}/verify/email`, userForm);
+      if (res.status === 400) {
+        console.log("burtgelgui hereglegsh bn");
+      }
+      if (res.status === 200) {
+        const { email } = res.data;
+        console.log("burtgeltei herel=glesh bn");
+        // router.push("/dashboard");
       } else {
         console.error("Failed customer:");
       }
@@ -91,7 +109,7 @@ export const ProfileProvider = ({
   };
   return (
     <ProfileContext.Provider
-      value={{ handleLogForm, postUserData, getCurrentUser }}
+      value={{ handleLogForm, postUserData, getCurrentUser, verifyUserEmail }}
     >
       {children}
     </ProfileContext.Provider>
