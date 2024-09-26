@@ -31,7 +31,7 @@ const Login = ({ handleLogForm, handleLogIn }: LogInProps) => {
           <Button variant={"myBtn"} className={` w-full`} onClick={handleLogIn}>
             Нэвтрэх
           </Button>
-          <Link href={"/"} className={` hover:underline mb-2`}>
+          <Link href="/forget" className={` hover:underline mb-2`}>
             Нууц үг солих
           </Link>
         </div>

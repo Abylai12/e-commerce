@@ -75,11 +75,11 @@ export const verifyUserOtp = async (req: Request, res: Response) => {
   const { email, otp } = otpEmail;
   try {
     const findUser = await User.find({ email, otp });
-    console.log("user", user);
+    // console.log("user", user);
     if (!findUser) {
       res.status(400).json({ message: "Not found user" });
     } else {
-      const { email, otp } = findUser;
+      // const { email, otp } = findUser;
       generateGmail(email.toString(), otp);
 
       res.status(200).json({ message: "success", email });
