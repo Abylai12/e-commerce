@@ -1,3 +1,5 @@
+"use client";
+
 import ForgetPass from "@/components/login/sendEmail";
 import { ProfileContext } from "@/context/profile-context";
 import React, { useContext } from "react";

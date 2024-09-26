@@ -61,7 +61,28 @@ export const verifyUserEmail = async (req: Request, res: Response) => {
         .padStart(4, "0");
       const { email } = user;
       generateGmail(email.toString(), rndOtp);
-      res.status(200).json({ message: "success", email, rndOtp });
+      user.otp = rndOtp;
+      await user.save();
+      res.status(200).json({ message: "success", email });
+    }
+  } catch (error) {
+    res.status(401).json({ error });
+  }
+};
+
+export const verifyUserOtp = async (req: Request, res: Response) => {
+  const { otpEmail } = req.body;
+  const { email, otp } = otpEmail;
+  try {
+    const findUser = await User.find({ email, otp });
+    console.log("user", user);
+    if (!findUser) {
+      res.status(400).json({ message: "Not found user" });
+    } else {
+      const { email, otp } = findUser;
+      generateGmail(email.toString(), otp);
+
+      res.status(200).json({ message: "success", email });
     }
   } catch (error) {
     res.status(401).json({ error });

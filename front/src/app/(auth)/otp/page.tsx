@@ -1,29 +1,20 @@
 "use client";
 
 import VerifyOtp from "@/components/login/verifyOtp";
-import React, { useState } from "react";
-
-interface IOtp {
-  firstDigit: string;
-  secondDigit: string;
-  thirdDigit: string;
-  fourthDigit: string;
-}
+import { ProfileContext } from "@/context/profile-context";
+import React, { useContext, useState } from "react";
 
 const OtpPage = () => {
-  const [otp, setOtp] = useState<IOtp>({
-    firstDigit: "",
-    secondDigit: "",
-    thirdDigit: "",
-    fourthDigit: "",
-  });
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setOtp({ ...otp, [name]: value });
+  const { setOtpEmail, verifyUserOtp } = useContext(ProfileContext);
+  const handleChange = (e: string) => {
+    setOtpEmail({ otp: e });
+    if (e.length === 4) {
+      verifyUserOtp();
+      console.log("sendfunction");
+    }
   };
-  console.log("object", otp);
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center heightcalc ">
       <VerifyOtp email="@gmail.com" handleChange={handleChange} />
     </div>
   );
