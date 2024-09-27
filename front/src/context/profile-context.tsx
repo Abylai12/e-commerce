@@ -10,7 +10,7 @@ import { useState } from "react";
 interface IUser {
   firstName: String;
   lastName: String;
-  email: String;
+  email: string;
   password: String;
   repassword: String;
 }
@@ -20,16 +20,29 @@ interface ProfileContextType {
   getCurrentUser: () => void;
   postUserData: () => void;
   verifyUserEmail: () => void;
-  verifyUserOtp: () => void;
-  setOtpEmail: Dispatch<SetStateAction<object>>;
+  verifyUserOtp: (otp: string) => Promise<void>;
+  setOtp: Dispatch<SetStateAction<string>>;
+  otp: string;
+  userForm: IUser;
+  verifyUserPassword: (resetToken: string | null) => Promise<void>;
 }
 export const ProfileContext = createContext<ProfileContextType>({
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
   getCurrentUser: () => {},
   postUserData: () => {},
   verifyUserEmail: () => {},
-  setOtpEmail: () => {},
-  verifyUserOtp: () => {},
+  setOtp: () => {},
+  verifyUserOtp: async () => {},
+  otp: "",
+  userForm: {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    repassword: "",
+  },
+  // verifyUserPassword: (resetToken: string) => {},
+  verifyUserPassword: async (resetToken: string | null) => {},
 });
 
 export const ProfileProvider = ({
@@ -45,10 +58,7 @@ export const ProfileProvider = ({
     password: "",
     repassword: "",
   });
-  const [otpEmail, setOtpEmail] = useState<object>({
-    otp: "",
-    email: "",
-  });
+  const [otp, setOtp] = useState<string>("");
   const handleLogForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserForm({
@@ -100,16 +110,15 @@ export const ProfileProvider = ({
   };
   const verifyUserEmail = async () => {
     const { email } = userForm;
+    console.log("verify email", email);
     try {
-      const res = await axios.post(`${apiURL}/verify/email`, email);
+      const res = await axios.post(`${apiURL}/verify/email`, { email });
       if (res.status === 400) {
         console.log("burtgelgui hereglegsh bn");
       }
       if (res.status === 200) {
         const { email } = res.data;
-        setOtpEmail({
-          email: email,
-        });
+        router.push("/otp");
         console.log("burtgeltei hereglegsh bn", email);
       } else {
         console.error("Failed customer:");
@@ -120,9 +129,10 @@ export const ProfileProvider = ({
     }
   };
 
-  const verifyUserOtp = async () => {
+  const verifyUserOtp = async (otp: string) => {
     try {
-      const res = await axios.post(`${apiURL}/verify/otp`, otpEmail);
+      const { email } = userForm;
+      const res = await axios.post(`${apiURL}/verify/otp`, { otp, email });
       if (res.status === 400) {
         console.log("burtgelgui hereglegsh bn");
       }
@@ -136,15 +146,41 @@ export const ProfileProvider = ({
       console.log("Failed to sign in. Please try again.");
     }
   };
+
+  const verifyUserPassword = async (resetToken: string | null) => {
+    try {
+      const { password, repassword } = userForm;
+      if (password !== repassword) {
+        return console.log("password don't match");
+      }
+      const res = await axios.post(`${apiURL}/verify/password`, {
+        password,
+        resetToken,
+      });
+      if (res.status === 400) {
+        console.log("tokenii hugatsaa duussan bn");
+      }
+      if (res.status === 200) {
+        router.push("/Login");
+        console.log("amjillttai shinechlegdlee");
+      }
+    } catch (error) {
+      console.log(error);
+      console.log("Failed to sign in. Please try again.");
+    }
+  };
   return (
     <ProfileContext.Provider
       value={{
         handleLogForm,
         postUserData,
         getCurrentUser,
+        setOtp,
+        otp,
+        userForm,
         verifyUserEmail,
-        setOtpEmail,
         verifyUserOtp,
+        verifyUserPassword,
       }}
     >
       {children}

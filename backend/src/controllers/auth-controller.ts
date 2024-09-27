@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/generateToken";
-import { generateGmail } from "../utils/sentGmail";
+import { generateGmail, sendEmailWithLink } from "../utils/sentGmail";
+import crypto from "crypto";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -50,20 +51,20 @@ export const logup = async (req: Request, res: Response) => {
 
 export const verifyUserEmail = async (req: Request, res: Response) => {
   const { email } = req.body;
+  console.log("user", email);
   try {
-    const user = await User.findOne({ email });
-    console.log("user", email);
-    if (!user) {
+    const findUser = await User.findOne({ email });
+
+    if (!findUser) {
       res.status(400).json({ message: "Not found user" });
     } else {
-      const rndOtp = Math.floor(Math.random() * 1000)
+      const rndOtp = Math.floor(Math.random() * 10000)
         .toString()
         .padStart(4, "0");
-      const { email } = user;
-      generateGmail(email.toString(), rndOtp);
-      user.otp = rndOtp;
-      await user.save();
-      res.status(200).json({ message: "success", email });
+      generateGmail(email, rndOtp);
+      findUser.otp = rndOtp;
+      await findUser.save();
+      res.status(200).json({ message: "success", email, rndOtp });
     }
   } catch (error) {
     res.status(401).json({ error });
@@ -71,20 +72,55 @@ export const verifyUserEmail = async (req: Request, res: Response) => {
 };
 
 export const verifyUserOtp = async (req: Request, res: Response) => {
-  const { otpEmail } = req.body;
-  const { email, otp } = otpEmail;
+  const { otp, email } = req.body;
+  console.log("otp email", otp, email);
   try {
-    const findUser = await User.find({ email, otp });
+    const findUser = await User.findOne({ email, otp });
     // console.log("user", user);
+    console.log("findUser", findUser);
     if (!findUser) {
-      res.status(400).json({ message: "Not found user" });
-    } else {
-      // const { email, otp } = findUser;
-      generateGmail(email.toString(), otp);
-
-      res.status(200).json({ message: "success", email });
+      return res.status(400).json({
+        message: "Бүртгэлтэй хэрэглэгч эсвэл OTP код олдсонгүй",
+        findUser,
+      });
     }
+
+    //sendEmail
+    const resetToken = crypto.randomBytes(25).toString("hex");
+    const hashedResetToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+    findUser.passwordResetToken = hashedResetToken;
+    findUser.passwordResetTokenExpire = new Date(Date.now() + 10 * 60 * 1000);
+    await findUser.save();
+    await sendEmailWithLink(email, resetToken);
+    res.status(200).json({ message: "Нууц үг сэргээх имэйл илгээлээ" });
   } catch (error) {
     res.status(401).json({ error });
   }
+};
+
+export const verifyUserPassword = async (req: Request, res: Response) => {
+  const { password, resetToken } = req.body;
+
+  const hashedResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  const findUser = await User.findOne({
+    passwordResetToken: hashedResetToken,
+    passwordResetTokenExpire: { $gt: Date.now },
+  });
+
+  if (!findUser) {
+    return res
+      .status(400)
+      .json({ message: "Таны нууц үг сэргээх хугацаа дууссан байна:" });
+  }
+
+  findUser.password = password;
+  await findUser.save();
+  res.status(200).json({ message: "Нууц үг  амжилттэй сэргээлээ" });
 };

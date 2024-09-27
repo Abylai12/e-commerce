@@ -5,7 +5,6 @@ import catRoute from "./routes/categoryRoute";
 import productRoute from "./routes/productRoute";
 import { connectDB } from "./config/db";
 import cors from "cors";
-import nodemailer from "nodemailer";
 
 dotenv.config();
 
@@ -19,24 +18,6 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", async (req: Request, res: Response) => {
-  const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    host: "smtp.gmail.email",
-    port: 465,
-    secure: true, // true for port 465, false for other ports
-    auth: {
-      user: "abilay1208@gmail.com",
-      pass: "lrjf uccn xnec zlyr",
-    },
-  });
-
-  const info = await transporter.sendMail({
-    from: "abilay1208@gmail.com>", // sender address
-    to: "baljinnym1318@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello baljka bro</b>", // html body
-  });
   res.send("Welcome E-commerce API Server");
   //localhost:8000/
 });

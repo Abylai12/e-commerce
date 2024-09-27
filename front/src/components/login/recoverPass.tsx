@@ -6,9 +6,9 @@ import { Button } from "../ui/button";
 
 type LogInProps = {
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleLogUp: () => void;
+  handleClick: () => void;
 };
-const LogUp = ({ handleLogForm, handleLogUp }: LogInProps) => {
+const RecoverPass = ({ handleLogForm, handleClick }: LogInProps) => {
   return (
     <div className="flex justify-center items-center w-full heightcalc">
       <div className="w-[334px] ">
@@ -30,7 +30,7 @@ const LogUp = ({ handleLogForm, handleLogUp }: LogInProps) => {
             <li>Тоо орсон байх</li>
             <li>Тэмдэгт орсон байх</li>
           </ul>
-          <Button variant={"myBtn"} className="w-full" onClick={handleLogUp}>
+          <Button variant={"myBtn"} className="w-full" onClick={handleClick}>
             Үүсгэх
           </Button>
         </div>
@@ -39,4 +39,4 @@ const LogUp = ({ handleLogForm, handleLogUp }: LogInProps) => {
   );
 };
 
-export default LogUp;
+export default RecoverPass;

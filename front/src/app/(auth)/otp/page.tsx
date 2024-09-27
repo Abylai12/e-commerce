@@ -5,17 +5,18 @@ import { ProfileContext } from "@/context/profile-context";
 import React, { useContext, useState } from "react";
 
 const OtpPage = () => {
-  const { setOtpEmail, verifyUserOtp } = useContext(ProfileContext);
+  const { userForm, verifyUserOtp } = useContext(ProfileContext);
   const handleChange = (e: string) => {
-    setOtpEmail({ otp: e });
     if (e.length === 4) {
-      verifyUserOtp();
-      console.log("sendfunction");
+      verifyUserOtp(e);
     }
   };
   return (
     <div className="flex flex-col justify-center items-center heightcalc ">
-      <VerifyOtp email="@gmail.com" handleChange={handleChange} />
+      <VerifyOtp
+        email={userForm.email.toString()}
+        handleChange={handleChange}
+      />
     </div>
   );
 };
