@@ -15,8 +15,8 @@ interface IUser {
   };
   address?: String;
   otp?: String;
-  passwordResetToken: String;
-  passwordResetTokenExpire: Date;
+  passwordResetToken?: String;
+  passwordResetTokenExpire?: Date;
   created_at: Date;
   updated_at: Date;
 }

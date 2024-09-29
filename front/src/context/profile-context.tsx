@@ -21,19 +21,16 @@ interface ProfileContextType {
   postUserData: () => void;
   verifyUserEmail: () => void;
   verifyUserOtp: (otp: string) => Promise<void>;
-  setOtp: Dispatch<SetStateAction<string>>;
-  otp: string;
   userForm: IUser;
-  verifyUserPassword: (resetToken: string | null) => Promise<void>;
+  isLoading: boolean;
+  verifyUserPassword: (resetToken: string) => Promise<Id | undefined>;
 }
 export const ProfileContext = createContext<ProfileContextType>({
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
   getCurrentUser: () => {},
   postUserData: () => {},
   verifyUserEmail: () => {},
-  setOtp: () => {},
   verifyUserOtp: async () => {},
-  otp: "",
   userForm: {
     firstName: "",
     lastName: "",
@@ -41,8 +38,9 @@ export const ProfileContext = createContext<ProfileContextType>({
     password: "",
     repassword: "",
   },
+  isLoading: false,
   // verifyUserPassword: (resetToken: string) => {},
-  verifyUserPassword: async (resetToken: string | null) => {},
+  verifyUserPassword: async () => {},
 });
 
 export const ProfileProvider = ({
@@ -51,6 +49,7 @@ export const ProfileProvider = ({
   children: React.ReactNode;
 }) => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userForm, setUserForm] = useState<IUser>({
     firstName: "",
     lastName: "",
@@ -58,7 +57,7 @@ export const ProfileProvider = ({
     password: "",
     repassword: "",
   });
-  const [otp, setOtp] = useState<string>("");
+
   const handleLogForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserForm({
@@ -85,6 +84,7 @@ export const ProfileProvider = ({
       }
     } catch (error) {
       console.log("error", error);
+      toast.warning("Failed to sign in. Please try again.");
     }
   };
 
@@ -105,68 +105,72 @@ export const ProfileProvider = ({
       }
     } catch (error) {
       console.log(error);
-      console.log("Failed to sign in. Please try again.");
+      toast.warning("Failed to sign in. Please try again.");
     }
   };
   const verifyUserEmail = async () => {
     const { email } = userForm;
-    console.log("verify email", email);
     try {
+      setIsLoading(true);
       const res = await axios.post(`${apiURL}/verify/email`, { email });
       if (res.status === 400) {
-        console.log("burtgelgui hereglegsh bn");
+        return toast.error("Бүртгэлгүй хэрэглэгч бна");
       }
       if (res.status === 200) {
-        const { email } = res.data;
         router.push("/otp");
-        console.log("burtgeltei hereglegsh bn", email);
-      } else {
-        console.error("Failed customer:");
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
-      console.log("Failed to sign in. Please try again.");
+      toast.warning("Failed to sign in. Please try again.");
+      setIsLoading(false);
     }
   };
 
   const verifyUserOtp = async (otp: string) => {
     try {
+      setIsLoading(true);
       const { email } = userForm;
       const res = await axios.post(`${apiURL}/verify/otp`, { otp, email });
       if (res.status === 400) {
-        console.log("burtgelgui hereglegsh bn");
+        setIsLoading(false);
+        return toast.warning(
+          "Баталгаажуулах OTP код буруу байна. Та дахин илгээнэ уу"
+        );
       }
       if (res.status === 200) {
-        console.log("email ruu n link ilgeeleee");
-      } else {
-        console.error("Failed customer:");
+        toast.success("Имейл хаяг руу холбоос илгээлэээ");
+        router.push("/Login");
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
-      console.log("Failed to sign in. Please try again.");
+      toast.warning("Failed to sign in. Please try again.");
+      setIsLoading(false);
     }
   };
 
-  const verifyUserPassword = async (resetToken: string | null) => {
+  const verifyUserPassword = async (resetToken: string) => {
     try {
       const { password, repassword } = userForm;
       if (password !== repassword) {
-        return console.log("password don't match");
+        return toast.warning("password don't match");
       }
+      console.log("pass, token", password, resetToken);
       const res = await axios.post(`${apiURL}/verify/password`, {
         password,
         resetToken,
       });
       if (res.status === 400) {
-        console.log("tokenii hugatsaa duussan bn");
+        toast.warning("tokenii hugatsaa duussan bn");
       }
       if (res.status === 200) {
+        toast.success("amjillttai shinechlegdlee");
         router.push("/Login");
-        console.log("amjillttai shinechlegdlee");
       }
     } catch (error) {
       console.log(error);
-      console.log("Failed to sign in. Please try again.");
+      toast.warning("Failed to sign in. Please try again.");
     }
   };
   return (
@@ -175,12 +179,11 @@ export const ProfileProvider = ({
         handleLogForm,
         postUserData,
         getCurrentUser,
-        setOtp,
-        otp,
-        userForm,
         verifyUserEmail,
         verifyUserOtp,
         verifyUserPassword,
+        userForm,
+        isLoading,
       }}
     >
       {children}

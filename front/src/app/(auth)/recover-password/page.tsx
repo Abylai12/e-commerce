@@ -1,9 +1,8 @@
 "use client";
 
 import RecoverPass from "@/components/login/recoverPass";
-import VerifyOtp from "@/components/login/verifyOtp";
 import { ProfileContext } from "@/context/profile-context";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React, { useContext, useState } from "react";
 
 const RecoverPassword = () => {

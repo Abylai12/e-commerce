@@ -7,20 +7,20 @@ import crypto from "crypto";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log("user", email);
+  console.log("user", email, password);
   try {
     const user = await User.findOne({ email });
-
+    console.log("finduser", user);
     if (!user) {
-      res.status(400).json({ message: "Not found user" });
+      return res.status(400).json({ message: "Not found user" });
+    }
+    const isCheck = bcrypt.compareSync(password, user.password);
+    if (!isCheck) {
+      res.status(402).json({ message: "Not match user email or password" });
     } else {
-      const isCheck = bcrypt.compareSync(password, user.password);
-      if (!isCheck) {
-        res.status(400).json({ message: "Not match user email or password" });
-      } else {
-        const token = generateToken({ id: user.id });
-        res.status(200).json({ message: "success", token, user });
-      }
+      const token = generateToken({ id: user.id });
+
+      res.status(200).json({ message: "success", token });
     }
   } catch (error) {
     res.status(401).json({ error });
@@ -54,7 +54,6 @@ export const verifyUserEmail = async (req: Request, res: Response) => {
   console.log("user", email);
   try {
     const findUser = await User.findOne({ email });
-
     if (!findUser) {
       res.status(400).json({ message: "Not found user" });
     } else {
@@ -64,7 +63,7 @@ export const verifyUserEmail = async (req: Request, res: Response) => {
       generateGmail(email, rndOtp);
       findUser.otp = rndOtp;
       await findUser.save();
-      res.status(200).json({ message: "success", email, rndOtp });
+      res.status(200).json({ message: "success" });
     }
   } catch (error) {
     res.status(401).json({ error });
@@ -81,7 +80,6 @@ export const verifyUserOtp = async (req: Request, res: Response) => {
     if (!findUser) {
       return res.status(400).json({
         message: "Бүртгэлтэй хэрэглэгч эсвэл OTP код олдсонгүй",
-        findUser,
       });
     }
 
@@ -103,24 +101,28 @@ export const verifyUserOtp = async (req: Request, res: Response) => {
 
 export const verifyUserPassword = async (req: Request, res: Response) => {
   const { password, resetToken } = req.body;
+  try {
+    const hashedResetToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
 
-  const hashedResetToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
+    const findUser = await User.findOne({
+      passwordResetToken: hashedResetToken,
+      passwordResetTokenExpire: { $gt: Date.now() },
+    });
+    console.log("user", findUser);
 
-  const findUser = await User.findOne({
-    passwordResetToken: hashedResetToken,
-    passwordResetTokenExpire: { $gt: Date.now },
-  });
+    if (!findUser) {
+      return res
+        .status(400)
+        .json({ message: "Таны нууц үг сэргээх хугацаа дууссан байна:" });
+    }
 
-  if (!findUser) {
-    return res
-      .status(400)
-      .json({ message: "Таны нууц үг сэргээх хугацаа дууссан байна:" });
+    findUser.password = password;
+    await findUser.save();
+    res.status(200).json({ message: "Нууц үг  амжилттэй сэргээлээ" });
+  } catch (error) {
+    res.status(401).json({ error });
   }
-
-  findUser.password = password;
-  await findUser.save();
-  res.status(200).json({ message: "Нууц үг  амжилттэй сэргээлээ" });
 };

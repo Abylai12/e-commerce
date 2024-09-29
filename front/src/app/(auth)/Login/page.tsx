@@ -10,7 +10,6 @@ export default function Home() {
   const handleLogIn = () => {
     getCurrentUser();
   };
-  localStorage.removeItem("token");
   return (
     <div>
       <Login handleLogForm={handleLogForm} handleLogIn={handleLogIn} />
