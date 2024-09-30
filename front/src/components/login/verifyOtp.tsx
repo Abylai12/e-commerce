@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   InputOTP,
   InputOTPGroup,
@@ -16,12 +16,27 @@ import Loader from "../loader/loader";
 //   handleChange: (e: string) => void;
 // };
 const VerifyOtp = () => {
+  const [countDown, setCountDown] = useState(30);
   const { userForm, verifyUserOtp, isLoading } = useContext(ProfileContext);
   const handleChange = (e: string) => {
     if (e.length === 4) {
       verifyUserOtp(e);
     }
   };
+
+  const handleResendOtp = () => {
+    setCountDown(30);
+  };
+
+  useEffect(() => {
+    if (countDown > 0) {
+      const countdown = setInterval(() => {
+        setCountDown((prevSeconds) => prevSeconds - 1);
+      }, 1000);
+
+      return () => clearInterval(countdown);
+    }
+  }, [countDown]);
   return (
     <div className="flex flex-col items-center justify-center gap-6">
       {!isLoading ? (
@@ -42,7 +57,13 @@ const VerifyOtp = () => {
               </InputOTPGroup>
             </InputOTP>
           </div>
-          <Button>Дахин илгээх</Button>
+          <Button
+            className="cursor-pointer text-muted-foreground mt-12 underline text-sm font-medium"
+            onClick={handleResendOtp}
+            variant="link"
+          >
+            Дахин илгээх ({countDown})
+          </Button>
         </>
       ) : (
         <Loader />

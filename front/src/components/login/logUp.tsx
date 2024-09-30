@@ -1,17 +1,117 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import React, { useState } from "react";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 type LogInProps = {
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleLogUp: () => void;
 };
-const LogUp = ({ handleLogForm, handleLogUp }: LogInProps) => {
+
+const formSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email." }).trim(),
+  password: z
+    .string()
+    .min(8, { message: "Be at least 8 characters long" })
+    .regex(/[a-zA-Z]/, { message: "Contain at least one letter." })
+    .regex(/[0-9]/, { message: "Contain at least one number." })
+    .regex(/[^a-zA-Z0-9]/, {
+      message: "Contain at least one special character.",
+    })
+    .trim(),
+  repassword: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+});
+
+export const LogUp = ({ handleLogForm, handleLogUp }: LogInProps) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      repassword: "",
+    },
+  });
+
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
+  }
   return (
     <div className="flex justify-center items-center w-full heightcalc">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>password</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="repassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>repassword</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <ul className="list-disc">
+            <li>Том үсэг орсон байх </li>
+            <li>Жижиг үсэг орсон байх </li>
+            <li>Тоо орсон байх</li>
+            <li>Тэмдэгт орсон байх</li>
+          </ul>
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+    </div>
+  );
+};
+
+{
+  /* <div className="flex justify-center items-center w-full heightcalc">
       <div className="w-[334px] ">
         <h1 className="text-2xl font-semibold text-center">Нэвтрэх</h1>
         <div className="flex flex-col gap-4 items-center mb-12 mt-6">
@@ -51,8 +151,5 @@ const LogUp = ({ handleLogForm, handleLogUp }: LogInProps) => {
           Нэвтрэх
         </Link>
       </div>
-    </div>
-  );
-};
-
-export default LogUp;
+    </div> */
+}

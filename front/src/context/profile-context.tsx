@@ -3,7 +3,7 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { Id, toast } from "react-toastify";
 import { apiURL } from "@/utils/apiHome";
 import { useState } from "react";
 
@@ -23,14 +23,20 @@ interface ProfileContextType {
   verifyUserOtp: (otp: string) => Promise<void>;
   userForm: IUser;
   isLoading: boolean;
-  verifyUserPassword: (resetToken: string) => Promise<Id | undefined>;
+  verifyUserPassword: (resetToken: string | null) => Promise<Id | undefined>;
 }
 export const ProfileContext = createContext<ProfileContextType>({
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
   getCurrentUser: () => {},
   postUserData: () => {},
   verifyUserEmail: () => {},
-  verifyUserOtp: async () => {},
+  verifyUserOtp: async (otp: string) => {},
+  // verifyUserPassword: (resetToken: string) => {},
+  verifyUserPassword: async (resetToken: string | null) => {
+    if (!resetToken) {
+      return toast.warning("password don't match");
+    }
+  },
   userForm: {
     firstName: "",
     lastName: "",
@@ -39,8 +45,6 @@ export const ProfileContext = createContext<ProfileContextType>({
     repassword: "",
   },
   isLoading: false,
-  // verifyUserPassword: (resetToken: string) => {},
-  verifyUserPassword: async () => {},
 });
 
 export const ProfileProvider = ({
@@ -134,7 +138,7 @@ export const ProfileProvider = ({
       const res = await axios.post(`${apiURL}/verify/otp`, { otp, email });
       if (res.status === 400) {
         setIsLoading(false);
-        return toast.warning(
+        toast.warning(
           "Баталгаажуулах OTP код буруу байна. Та дахин илгээнэ уу"
         );
       }
@@ -150,7 +154,7 @@ export const ProfileProvider = ({
     }
   };
 
-  const verifyUserPassword = async (resetToken: string) => {
+  const verifyUserPassword = async (resetToken: string | null) => {
     try {
       const { password, repassword } = userForm;
       if (password !== repassword) {
