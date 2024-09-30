@@ -12,7 +12,7 @@ import { Twitter } from "lucide-react";
 
 const Footer = () => {
   return (
-    <section className="bg-black py-16 px-[200px]">
+    <section className="bg-black py-12 px-[200px]">
       <div className="flex justify-between items-center">
         <img src="./Vector.svg" alt="img" />
         <div className="flex gap-10">
@@ -32,7 +32,7 @@ const Footer = () => {
       </div>
       <div className="border-b border-slate-500 my-11"></div>
       <div className="text-white flex justify-between">
-        <div>
+        <div className="flex gap-2">
           <Copyright />
           <p>2024 Ecommerce MN</p>
         </div>

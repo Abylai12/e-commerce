@@ -14,21 +14,29 @@ interface IUser {
   password: String;
   repassword: String;
 }
+// zodValue interface
+interface IZodValue {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  repassword: string;
+}
 
 interface ProfileContextType {
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   getCurrentUser: () => void;
-  postUserData: () => void;
+  logUpUser: (zodValue: IZodValue) => void;
   verifyUserEmail: () => void;
   verifyUserOtp: (otp: string) => Promise<void>;
+  verifyUserPassword: (resetToken: string | null) => Promise<Id | undefined>;
   userForm: IUser;
   isLoading: boolean;
-  verifyUserPassword: (resetToken: string | null) => Promise<Id | undefined>;
 }
 export const ProfileContext = createContext<ProfileContextType>({
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
   getCurrentUser: () => {},
-  postUserData: () => {},
+  logUpUser: (zodValue: IZodValue) => {},
   verifyUserEmail: () => {},
   verifyUserOtp: async (otp: string) => {},
   // verifyUserPassword: (resetToken: string) => {},
@@ -61,6 +69,7 @@ export const ProfileProvider = ({
     password: "",
     repassword: "",
   });
+  // zod form
 
   const handleLogForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -69,22 +78,21 @@ export const ProfileProvider = ({
       [name]: value,
     });
   };
-  const postUserData = async () => {
+  const logUpUser = async (zodValue: IZodValue) => {
     try {
-      const { firstName, repassword, lastName, email, password } = userForm;
+      const { firstName, lastName, repassword, email, password } = zodValue;
       if (password !== repassword) {
-        return console.log("password don't match");
+        return toast.error("Нууц үг хоорондоо нийцэхгүй байна");
       }
-      console.log("object", firstName);
-      const newForm = { firstName, lastName, email, password };
+
+      const newForm = { email, password, firstName, lastName };
       const res = await axios.post(`${apiURL}/logup`, newForm);
 
       if (res.status === 200) {
-        toast.success("Customer created successfully:");
+        toast.success("Хэрэглэгч амжилттай бүртгэгдлээ");
         router.push("/Login");
       } else {
-        toast.error("Failed to create customer");
-        console.error("Failed to create customer:");
+        toast.error("Бүртгэлтэй хэрэглэгч байна!");
       }
     } catch (error) {
       console.log("error", error);
@@ -97,11 +105,11 @@ export const ProfileProvider = ({
       const res = await axios.post(`${apiURL}/login`, userForm);
       console.log("first");
       if (res.status === 400) {
-        console.log("burtgelgui hereglegsh bn");
+        toast.warning("Бүртгэлтэй хэрэглэгч байна!");
       }
       if (res.status === 200) {
         const { token, user } = res.data;
-        console.log("User successfully signed in", token);
+        toast.success("User successfully signed in");
         router.push("/dashboard");
         localStorage.setItem("token", token);
       } else {
@@ -181,7 +189,7 @@ export const ProfileProvider = ({
     <ProfileContext.Provider
       value={{
         handleLogForm,
-        postUserData,
+        logUpUser,
         getCurrentUser,
         verifyUserEmail,
         verifyUserOtp,

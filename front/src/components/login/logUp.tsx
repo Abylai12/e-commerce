@@ -1,28 +1,29 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-type LogInProps = {
-  handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleLogUp: () => void;
-};
+import { ProfileContext } from "@/context/profile-context";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
+  firstName: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  lastName: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
   email: z.string().email({ message: "Please enter a valid email." }).trim(),
   password: z
     .string()
@@ -38,34 +39,62 @@ const formSchema = z.object({
   }),
 });
 
-export const LogUp = ({ handleLogForm, handleLogUp }: LogInProps) => {
+export const LogUp = () => {
+  const { logUpUser } = useContext(ProfileContext);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       repassword: "",
     },
   });
-
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    logUpUser(values);
     console.log(values);
-  }
+  };
   return (
-    <div className="flex justify-center items-center w-full heightcalc">
+    <div className="flex justify-center items-center heightcalc">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-6 w-[300px]"
+        >
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="firstName" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="lastName" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -76,9 +105,8 @@ export const LogUp = ({ handleLogForm, handleLogUp }: LogInProps) => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>password</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="password" {...field} type="password" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -89,21 +117,28 @@ export const LogUp = ({ handleLogForm, handleLogUp }: LogInProps) => {
             name="repassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>repassword</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="repassword" {...field} type="password" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <ul className="list-disc">
+          <ul className="list-disc ml-8 text-xs text-muted-foreground">
             <li>Том үсэг орсон байх </li>
             <li>Жижиг үсэг орсон байх </li>
             <li>Тоо орсон байх</li>
             <li>Тэмдэгт орсон байх</li>
           </ul>
-          <Button type="submit">Submit</Button>
+          <Button variant={"myBtn"} type="submit">
+            Үүсгэх
+          </Button>
+          <Link
+            href="/Login"
+            className={` bg-white flex justify-center text-black  border border-blue-700 rounded-2xl bg-primary w-full py-2 px-4`}
+          >
+            Нэвтрэх
+          </Link>
         </form>
       </Form>
     </div>
