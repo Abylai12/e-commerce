@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   login,
   logup,
+  updateUserInfo,
   verifyUserEmail,
   verifyUserOtp,
   verifyUserPassword,
@@ -14,4 +15,5 @@ router.route("/logup").post(logup);
 router.route("/verify/email").post(verifyUserEmail);
 router.route("/verify/otp").post(verifyUserOtp);
 router.route("/verify/password").post(verifyUserPassword);
+router.route("/update/info").post(auth, updateUserInfo);
 export default router;

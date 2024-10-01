@@ -45,7 +45,33 @@ export const logup = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "success", user: createdUser });
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(400).json({ message: error });
+  }
+};
+export const updateUserInfo = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.user;
+    const { email, firstName, lastName, phoneNumber, address } = req.body;
+    if (!firstName || !lastName || !email || !phoneNumber || !address) {
+      return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
+    }
+    const id = { _id: id };
+
+    const update = {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      address,
+    };
+    const updatedUser = await User.findByIdAndUpdate(id, update, {
+      new: true,
+    });
+    console.log("updatedUser", updatedUser);
+
+    res.status(200).json({ message: "success", updatedUser });
+  } catch (error) {
+    res.status(400).json({ message: error });
   }
 };
 
