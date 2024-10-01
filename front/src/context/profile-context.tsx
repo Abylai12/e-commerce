@@ -14,33 +14,28 @@ interface IUser {
   password: String;
   repassword: String;
 }
-// zodValue interface
-interface IZodValue {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  repassword: string;
-}
 
 interface ProfileContextType {
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   getCurrentUser: () => void;
-  logUpUser: (zodValue: IZodValue) => void;
+  logUpUser: (zodValue: IUser) => void;
   verifyUserEmail: () => void;
   verifyUserOtp: (otp: string) => Promise<void>;
-  verifyUserPassword: (resetToken: string | null) => Promise<Id | undefined>;
+  verifyUserPassword: (
+    resetToken: string | null,
+    formValues: IUser
+  ) => Promise<Id | undefined>;
   userForm: IUser;
   isLoading: boolean;
 }
 export const ProfileContext = createContext<ProfileContextType>({
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
   getCurrentUser: () => {},
-  logUpUser: (zodValue: IZodValue) => {},
+  logUpUser: (zodValue: IUser) => {},
   verifyUserEmail: () => {},
   verifyUserOtp: async (otp: string) => {},
   // verifyUserPassword: (resetToken: string) => {},
-  verifyUserPassword: async (resetToken: string | null) => {
+  verifyUserPassword: async (resetToken: string | null, formValues: IUser) => {
     if (!resetToken) {
       return toast.warning("password don't match");
     }
@@ -52,6 +47,7 @@ export const ProfileContext = createContext<ProfileContextType>({
     password: "",
     repassword: "",
   },
+
   isLoading: false,
 });
 
@@ -78,7 +74,7 @@ export const ProfileProvider = ({
       [name]: value,
     });
   };
-  const logUpUser = async (zodValue: IZodValue) => {
+  const logUpUser = async (zodValue: IUser) => {
     try {
       const { firstName, lastName, repassword, email, password } = zodValue;
       if (password !== repassword) {
@@ -162,9 +158,12 @@ export const ProfileProvider = ({
     }
   };
 
-  const verifyUserPassword = async (resetToken: string | null) => {
+  const verifyUserPassword = async (
+    resetToken: string | null,
+    formValues: IUser
+  ) => {
     try {
-      const { password, repassword } = userForm;
+      const { password, repassword } = formValues;
       if (password !== repassword) {
         return toast.warning("password don't match");
       }

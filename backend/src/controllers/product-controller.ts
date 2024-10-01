@@ -28,8 +28,6 @@ export const createProduct = async (req: Request, res: Response) => {
       discount,
       category,
     });
-    console.log("category", name);
-
     res.status(200).json({ message: "success", product });
   } catch (error) {
     res.status(401).json({ error });

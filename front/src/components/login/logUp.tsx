@@ -8,54 +8,19 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ProfileContext } from "@/context/profile-context";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-const formSchema = z.object({
-  firstName: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  lastName: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  email: z.string().email({ message: "Please enter a valid email." }).trim(),
-  password: z
-    .string()
-    .min(8, { message: "Be at least 8 characters long" })
-    .regex(/[a-zA-Z]/, { message: "Contain at least one letter." })
-    .regex(/[0-9]/, { message: "Contain at least one number." })
-    .regex(/[^a-zA-Z0-9]/, {
-      message: "Contain at least one special character.",
-    })
-    .trim(),
-  repassword: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-});
-
+import { formSchema } from "@/utils/validationSchema";
+import { form } from "@/utils/validationSchema";
 export const LogUp = () => {
   const { logUpUser } = useContext(ProfileContext);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      repassword: "",
-    },
-  });
   // 2. Define a submit handler.
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     logUpUser(values);
-    console.log(values);
   };
   return (
     <div className="flex justify-center items-center heightcalc">
