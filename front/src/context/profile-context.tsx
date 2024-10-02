@@ -1,11 +1,12 @@
 "use client";
 
-import { createContext, Dispatch, SetStateAction } from "react";
+import { createContext, Dispatch, SetStateAction, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Id, toast } from "react-toastify";
 import { apiURL } from "@/utils/apiHome";
 import { useState } from "react";
+import { headers } from "next/headers";
 
 interface IUser {
   firstName: String;
@@ -15,40 +16,39 @@ interface IUser {
   repassword: String;
 }
 
+interface ILoggedUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
 interface ProfileContextType {
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  getCurrentUser: () => void;
+  logInUser: () => void;
   logUpUser: (zodValue: IUser) => void;
   verifyUserEmail: () => void;
   verifyUserOtp: (otp: string) => Promise<void>;
+  getCurrentUser: () => void;
   verifyUserPassword: (
     resetToken: string | null,
     formValues: IUser
   ) => Promise<Id | undefined>;
-  userForm: IUser;
   isLoading: boolean;
+  user: ILoggedUser | null;
 }
 export const ProfileContext = createContext<ProfileContextType>({
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
-  getCurrentUser: () => {},
+  logInUser: () => {},
   logUpUser: (zodValue: IUser) => {},
   verifyUserEmail: () => {},
   verifyUserOtp: async (otp: string) => {},
-  // verifyUserPassword: (resetToken: string) => {},
+  getCurrentUser: () => {},
   verifyUserPassword: async (resetToken: string | null, formValues: IUser) => {
     if (!resetToken) {
       return toast.warning("password don't match");
     }
   },
-  userForm: {
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    repassword: "",
-  },
-
   isLoading: false,
+  user: null,
 });
 
 export const ProfileProvider = ({
@@ -57,6 +57,8 @@ export const ProfileProvider = ({
   children: React.ReactNode;
 }) => {
   const router = useRouter();
+  const [user, setUser] = useState<ILoggedUser | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userForm, setUserForm] = useState<IUser>({
     firstName: "",
@@ -96,24 +98,39 @@ export const ProfileProvider = ({
     }
   };
 
-  const getCurrentUser = async () => {
+  const logInUser = async () => {
     try {
       const res = await axios.post(`${apiURL}/login`, userForm);
-      console.log("first");
       if (res.status === 400) {
         toast.warning("Бүртгэлтэй хэрэглэгч байна!");
       }
       if (res.status === 200) {
-        const { token, user } = res.data;
-        toast.success("User successfully signed in");
-        router.push("/dashboard");
+        const { token } = res.data;
         localStorage.setItem("token", token);
+        console.log("token", token);
+        toast.success("User successfully signed in");
+        router.push("/userInfo");
       } else {
         console.error("Failed customer:");
       }
     } catch (error) {
       console.log(error);
       toast.warning("Failed to sign in. Please try again.");
+    }
+  };
+  const getCurrentUser = async () => {
+    try {
+      const res = await axios.get(`${apiURL}/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        const { user } = res.data;
+        setUser(user);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   const verifyUserEmail = async () => {
@@ -184,17 +201,25 @@ export const ProfileProvider = ({
       toast.warning("Failed to sign in. Please try again.");
     }
   };
+  useEffect(() => {
+    if (token) {
+      getCurrentUser();
+    } else {
+      setToken(localStorage.getItem("token"));
+    }
+  }, [token]);
   return (
     <ProfileContext.Provider
       value={{
         handleLogForm,
         logUpUser,
-        getCurrentUser,
+        logInUser,
         verifyUserEmail,
         verifyUserOtp,
         verifyUserPassword,
-        userForm,
+        getCurrentUser,
         isLoading,
+        user,
       }}
     >
       {children}

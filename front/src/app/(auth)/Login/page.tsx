@@ -6,9 +6,9 @@ import { ProfileContext } from "@/context/profile-context";
 import { useContext, useState } from "react";
 
 export default function Home() {
-  const { handleLogForm, getCurrentUser } = useContext(ProfileContext);
+  const { handleLogForm, logInUser } = useContext(ProfileContext);
   const handleLogIn = () => {
-    getCurrentUser();
+    logInUser();
   };
   return (
     <div>

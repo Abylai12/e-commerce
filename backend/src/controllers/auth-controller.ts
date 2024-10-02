@@ -7,10 +7,8 @@ import crypto from "crypto";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log("user", email, password);
   try {
     const user = await User.findOne({ email });
-    console.log("finduser", user);
     if (!user) {
       return res.status(400).json({ message: "Not found user" });
     }
@@ -19,9 +17,49 @@ export const login = async (req: Request, res: Response) => {
       res.status(402).json({ message: "Not match user email or password" });
     } else {
       const token = generateToken({ id: user.id });
+      const { email, profile_img, firstName, lastName } = user;
 
-      res.status(200).json({ message: "success", token });
+      res.status(200).json({
+        message: "success",
+        token,
+        user: { email, profile_img, firstName, lastName },
+      });
     }
+  } catch (error) {
+    res.status(401).json({ error });
+  }
+};
+
+export const getCurrentUser = async (req: Request, res: Response) => {
+  const { id } = req.user;
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(400).json({ message: "Not found user" });
+    }
+    const { email, profile_img, firstName, lastName } = user;
+    res.status(200).json({
+      message: "success",
+      user: { email, profile_img, firstName, lastName },
+    });
+  } catch (error) {
+    res.status(401).json({ error });
+  }
+};
+export const getUserData = async (req: Request, res: Response) => {
+  const { id } = req.user;
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(400).json({ message: "Not found user" });
+    }
+    const { email, profile_img, firstName, lastName } = user;
+    res.status(200).json({
+      message: "success",
+      user: { email, profile_img, firstName, lastName },
+    });
   } catch (error) {
     res.status(401).json({ error });
   }
@@ -55,7 +93,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
     if (!firstName || !lastName || !email || !phoneNumber || !address) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
-    const id = { _id: id };
+    // const id = { _id: id };
 
     const update = {
       firstName,
@@ -67,8 +105,6 @@ export const updateUserInfo = async (req: Request, res: Response) => {
     const updatedUser = await User.findByIdAndUpdate(id, update, {
       new: true,
     });
-    console.log("updatedUser", updatedUser);
-
     res.status(200).json({ message: "success", updatedUser });
   } catch (error) {
     res.status(400).json({ message: error });
@@ -77,7 +113,6 @@ export const updateUserInfo = async (req: Request, res: Response) => {
 
 export const verifyUserEmail = async (req: Request, res: Response) => {
   const { email } = req.body;
-  console.log("user", email);
   try {
     const findUser = await User.findOne({ email });
     if (!findUser) {
@@ -98,11 +133,9 @@ export const verifyUserEmail = async (req: Request, res: Response) => {
 
 export const verifyUserOtp = async (req: Request, res: Response) => {
   const { otp, email } = req.body;
-  console.log("otp email", otp, email);
   try {
     const findUser = await User.findOne({ email, otp });
     // console.log("user", user);
-    console.log("findUser", findUser);
     if (!findUser) {
       return res.status(400).json({
         message: "Бүртгэлтэй хэрэглэгч эсвэл OTP код олдсонгүй",

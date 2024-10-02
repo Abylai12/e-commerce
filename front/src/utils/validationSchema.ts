@@ -1,6 +1,4 @@
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 
 export const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -29,15 +27,14 @@ export const formSchema = z.object({
   address: z.string(),
 });
 
-export const form = useForm<z.infer<typeof formSchema>>({
-  resolver: zodResolver(formSchema),
-  defaultValues: {
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    repassword: "",
-    phoneNumber: "",
-    address: "",
-  },
+export const userSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string().email({ message: "Please enter a valid email." }).trim(),
+  phoneNumber: z
+    .string()
+    .min(10, { message: "Must be a valid mobile number" })
+    .max(14, { message: "Must be a valid mobile number" }),
+  address: z.string(),
+  profile_img: z.string(),
 });

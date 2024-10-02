@@ -7,7 +7,7 @@ import { DecodeToken } from "../utils/decodeToken";
 declare global {
   namespace Express {
     interface Request {
-      user: string | object;
+      user: string | any;
     }
   }
 }

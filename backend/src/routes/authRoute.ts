@@ -1,5 +1,7 @@
 import { Router } from "express";
 import {
+  getCurrentUser,
+  getUserData,
   login,
   logup,
   updateUserInfo,
@@ -10,7 +12,9 @@ import {
 import { auth } from "../middlewares/authentication";
 
 const router = Router();
-router.route("/login").post(login);
+router.route("/login").post(login).get(auth, getCurrentUser);
+router.route("/profile").get(auth, getCurrentUser);
+router.route("/update.user").get(auth, getUserData);
 router.route("/logup").post(logup);
 router.route("/verify/email").post(verifyUserEmail);
 router.route("/verify/otp").post(verifyUserOtp);

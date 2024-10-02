@@ -14,7 +14,9 @@ import { Input } from "@/components/ui/input";
 import { ProfileContext } from "@/context/profile-context";
 import { z } from "zod";
 import { formSchema } from "@/utils/validationSchema";
-import { form } from "@/utils/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
 export const LogUp = () => {
   const { logUpUser } = useContext(ProfileContext);
 
@@ -22,6 +24,18 @@ export const LogUp = () => {
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     logUpUser(values);
   };
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      repassword: "",
+      phoneNumber: "",
+      address: "",
+    },
+  });
   return (
     <div className="flex justify-center items-center heightcalc">
       <Form {...form}>
