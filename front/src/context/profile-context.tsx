@@ -105,8 +105,9 @@ export const ProfileProvider = ({
         toast.warning("Бүртгэлтэй хэрэглэгч байна!");
       }
       if (res.status === 200) {
-        const { token } = res.data;
+        const { token, user } = res.data;
         localStorage.setItem("token", token);
+
         console.log("token", token);
         toast.success("User successfully signed in");
         router.push("/userInfo");
@@ -120,7 +121,7 @@ export const ProfileProvider = ({
   };
   const getCurrentUser = async () => {
     try {
-      const res = await axios.get(`${apiURL}/profile`, {
+      const res = await axios.get(`${apiURL}/get/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -202,10 +203,11 @@ export const ProfileProvider = ({
     }
   };
   useEffect(() => {
+    const checkToken = localStorage.getItem("token");
     if (token) {
       getCurrentUser();
     } else {
-      setToken(localStorage.getItem("token"));
+      setToken(checkToken);
     }
   }, [token]);
   return (

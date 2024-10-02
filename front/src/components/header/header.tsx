@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Search } from "lucide-react";
 import { Heart } from "lucide-react";
@@ -8,13 +8,13 @@ import { ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { UserPen } from "lucide-react";
+import { ProfileContext } from "@/context/profile-context";
 
 const Header = () => {
-  const [token, setToken] = useState<boolean>(true);
-  // const token = localStorage.getItem("token");
-  // console.log("token", token);
+  const { user } = useContext(ProfileContext);
+
   const router = useRouter();
-  // useEffect(() => {}, []);
+
   return (
     <section className="flex bg-black px-6 py-4 justify-between">
       <div className="flex items-center gap-8">
@@ -36,7 +36,7 @@ const Header = () => {
         <Heart className="text-white" />
         <ShoppingCart className="text-white" />
 
-        {!token ? (
+        {!user ? (
           <div>
             <Button
               variant={"outline"}
