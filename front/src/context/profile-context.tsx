@@ -20,6 +20,7 @@ interface ILoggedUser {
   firstName: string;
   lastName: string;
   email: string;
+  profile_img: string;
 }
 interface ProfileContextType {
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -107,10 +108,9 @@ export const ProfileProvider = ({
       if (res.status === 200) {
         const { token, user } = res.data;
         localStorage.setItem("token", token);
-
         console.log("token", token);
         toast.success("User successfully signed in");
-        router.push("/userInfo");
+        router.push("/dashboard");
       } else {
         console.error("Failed customer:");
       }

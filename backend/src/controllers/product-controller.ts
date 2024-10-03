@@ -33,3 +33,13 @@ export const createProduct = async (req: Request, res: Response) => {
     res.status(401).json({ error });
   }
 };
+
+export const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const product = await Product.find().populate("category");
+    res.status(200).json({ message: "success", product });
+  } catch (error) {
+    res.status(401).json({ error });
+    console.error(error);
+  }
+};

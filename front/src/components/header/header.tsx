@@ -7,12 +7,12 @@ import { Heart } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { UserPen } from "lucide-react";
 import { ProfileContext } from "@/context/profile-context";
+import { DropdownMenuDemo } from "./dropdown";
+import Link from "next/link";
 
 const Header = () => {
   const { user } = useContext(ProfileContext);
-
   const router = useRouter();
 
   return (
@@ -20,9 +20,13 @@ const Header = () => {
       <div className="flex items-center gap-8">
         <div className="flex items-center gap-2">
           <img src="./Vector.svg" alt="img" />
-          <span className="text-white text-sm">ECOMMERCE</span>
+          <Link href="/dashboard" className="text-white text-sm">
+            ECOMMERCE
+          </Link>
         </div>
-        <span className="text-white">Ангилал</span>
+        <Link href="/category" className="text-white">
+          Ангилал
+        </Link>
       </div>
       <div className="py-2 px-4 rounded-[20px] bg-primary flex items-center gap-2">
         <Search className="text-white text-2xl" />
@@ -50,9 +54,7 @@ const Header = () => {
             </Button>
           </div>
         ) : (
-          <button>
-            <UserPen className="text-white" />
-          </button>
+          <DropdownMenuDemo imgURl={user.profile_img} />
         )}
       </div>
     </section>

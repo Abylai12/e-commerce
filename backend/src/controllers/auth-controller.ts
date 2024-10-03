@@ -17,12 +17,9 @@ export const login = async (req: Request, res: Response) => {
       res.status(402).json({ message: "Not match user email or password" });
     } else {
       const token = generateToken({ id: user.id });
-      const { email, profile_img, firstName, lastName } = user;
-
       res.status(200).json({
         message: "success",
         token,
-        user: { email, profile_img, firstName, lastName },
       });
     }
   } catch (error) {
@@ -32,7 +29,6 @@ export const login = async (req: Request, res: Response) => {
 
 export const getCurrentUser = async (req: Request, res: Response) => {
   const { id } = req.user;
-
   try {
     const user = await User.findById(id);
     if (!user) {
@@ -47,24 +43,6 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     res.status(401).json({ error });
   }
 };
-export const getUserData = async (req: Request, res: Response) => {
-  const { id } = req.user;
-
-  try {
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(400).json({ message: "Not found user" });
-    }
-    const { email, profile_img, firstName, lastName } = user;
-    res.status(200).json({
-      message: "success",
-      user: { email, profile_img, firstName, lastName },
-    });
-  } catch (error) {
-    res.status(401).json({ error });
-  }
-};
-
 export const logup = async (req: Request, res: Response) => {
   try {
     const { email, firstName, lastName, password } = req.body;
@@ -89,8 +67,16 @@ export const logup = async (req: Request, res: Response) => {
 export const updateUserInfo = async (req: Request, res: Response) => {
   try {
     const { id } = req.user;
-    const { email, firstName, lastName, phoneNumber, address } = req.body;
-    if (!firstName || !lastName || !email || !phoneNumber || !address) {
+    const { email, firstName, lastName, phoneNumber, address, profile_img } =
+      req.body;
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !phoneNumber ||
+      !address ||
+      !profile_img
+    ) {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
     // const id = { _id: id };
@@ -101,6 +87,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
       email,
       phoneNumber,
       address,
+      profile_img,
     };
     const updatedUser = await User.findByIdAndUpdate(id, update, {
       new: true,

@@ -19,6 +19,8 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { ProfileContext } from "@/context/profile-context";
 import Loader from "../loader/loader";
+import { apiURL } from "@/utils/apiHome";
+import { toast } from "react-toastify";
 
 // const [image, setImage] = useState<string | null>(null);
 const UserInfoForm = () => {
@@ -68,9 +70,30 @@ const UserInfoForm = () => {
       setUploading(false);
     }
   };
+  const updateUserData = async (values: z.infer<typeof userSchema>) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.warning("Authentication token is missing. Please log in.");
+      return;
+    }
+    try {
+      const res = await axios.put(`${apiURL}/update/profile`, values, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        toast.success("Мэдээлэл амжилттай шинэчлэгдлээ");
+      }
+    } catch (error) {
+      console.log("error", error);
+      toast.warning("Failed to sign in. Please try again.");
+    }
+  };
 
   const onSubmit = (values: z.infer<typeof userSchema>) => {
     console.log(values);
+    updateUserData(values);
   };
 
   return (

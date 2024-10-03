@@ -17,5 +17,5 @@ router.route("/get/profile").get(auth, getCurrentUser);
 router.route("/verify/email").post(verifyUserEmail);
 router.route("/verify/otp").post(verifyUserOtp);
 router.route("/verify/password").post(verifyUserPassword);
-router.route("/update/profile").post(auth, updateUserInfo);
+router.route("/update/profile").put(auth, updateUserInfo);
 export default router;

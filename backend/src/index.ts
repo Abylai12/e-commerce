@@ -30,16 +30,3 @@ connectDB(MONGO_URI);
 app.listen(PORT, () => {
   console.log(`Сервер localhost:${PORT} дээр аслаа`);
 });
-
-// const rndOtp = Math.floor(Math.random() * 1000)
-// .toString()
-// .padStart(4, "0");
-// const { data, error } = await resend.emails.send({
-// from: "Acme <onboarding@resend.dev>",
-// to: ["abilay1208@gmail.com"],
-// subject: "hello world",
-// html: generateTemplate(rndOtp),
-// });
-// if (error) {
-// console.error("email_err", { error });
-// }

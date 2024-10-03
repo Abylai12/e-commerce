@@ -20,6 +20,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         myBtn:
           "bg-blue-700 rounded-2xl text-primary-foreground hover:bg-primary/90",
+        btn: "bg-black",
       },
       size: {
         default: "h-10 px-4 py-2",
