@@ -43,3 +43,32 @@ export const getAllProducts = async (req: Request, res: Response) => {
     console.error(error);
   }
 };
+
+export const getAllProductsWithSearch = async (req: Request, res: Response) => {
+  const { category, size, name } = req.body;
+  try {
+    const query: any = {};
+    if (category) query.category = category;
+    if (size) query.size = size;
+    if (name) query.name = name;
+
+    const products = await Product.find(query);
+    res.status(200).json({ message: "success", products });
+  } catch (error) {
+    res.status(401).json({ error: "Failed to retrieve products" });
+    console.error(error);
+  }
+};
+
+export const getProductDetail = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { category } = req.body;
+  try {
+    const productDetail = await Product.find({ id });
+    const products = await Product.find({ category }).limit(8);
+    res.status(200).json({ message: "success", productDetail, products });
+  } catch (error) {
+    res.status(401).json({ error: "Failed to retrieve products" });
+    console.error(error);
+  }
+};

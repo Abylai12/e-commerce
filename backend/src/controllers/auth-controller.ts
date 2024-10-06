@@ -128,7 +128,6 @@ export const verifyUserOtp = async (req: Request, res: Response) => {
         message: "Бүртгэлтэй хэрэглэгч эсвэл OTP код олдсонгүй",
       });
     }
-
     //sendEmail
     const resetToken = crypto.randomBytes(25).toString("hex");
     const hashedResetToken = crypto
