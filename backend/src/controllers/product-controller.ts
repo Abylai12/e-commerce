@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Product from "../models/product.model";
+import Category from "../models/category.model";
 
 export const createProduct = async (req: Request, res: Response) => {
   const {
@@ -36,8 +37,9 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const product = await Product.find().populate("category");
-    res.status(200).json({ message: "success", product });
+    const products = await Product.find().populate("category");
+    const categories = await Category.find();
+    res.status(200).json({ message: "success", products, categories });
   } catch (error) {
     res.status(401).json({ error });
     console.error(error);

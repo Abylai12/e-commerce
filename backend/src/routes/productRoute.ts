@@ -9,7 +9,7 @@ import {
 const router = Router();
 
 router.route("/create/product").post(createProduct);
-router.route("/get/products").get(getAllProducts);
+router.route("/get/product").get(getAllProducts);
 router.route("/get/products/search").post(getAllProductsWithSearch);
 router.route("/get/product/detail").post(getProductDetail);
 

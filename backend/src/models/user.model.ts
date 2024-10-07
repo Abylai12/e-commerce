@@ -61,5 +61,5 @@ userSchema.pre("save", async function (next) {
     next();
   }
 });
-const User = model("user", userSchema);
+const User = model("User", userSchema);
 export default User;
