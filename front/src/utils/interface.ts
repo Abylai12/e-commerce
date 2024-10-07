@@ -7,7 +7,9 @@ export interface IGet {
 export type Product = {
   name: string;
   price: number;
-  image: string;
+  images: string;
+  discount: number;
+  _id: string;
 };
 
 // discount: number;

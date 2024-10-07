@@ -37,9 +37,10 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const products = await Product.find().populate("category");
+    const products = await Product.find().populate("category").limit(18);
+    const product = await Product.find().sort({ createdAt: -1 }).limit(1);
     const categories = await Category.find();
-    res.status(200).json({ message: "success", products, categories });
+    res.status(200).json({ message: "success", products, categories, product });
   } catch (error) {
     res.status(401).json({ error });
     console.error(error);

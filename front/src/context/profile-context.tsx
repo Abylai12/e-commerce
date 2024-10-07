@@ -85,7 +85,7 @@ export const ProfileProvider = ({
       }
 
       const newForm = { email, password, firstName, lastName };
-      const res = await axios.post(`${apiURL}/logup`, newForm);
+      const res = await axios.post(`${apiURL}/auth/logup`, newForm);
 
       if (res.status === 200) {
         toast.success("Хэрэглэгч амжилттай бүртгэгдлээ");
@@ -101,7 +101,7 @@ export const ProfileProvider = ({
 
   const logInUser = async () => {
     try {
-      const res = await axios.post(`${apiURL}/login`, userForm);
+      const res = await axios.post(`${apiURL}/auth/login`, userForm);
       if (res.status === 400) {
         toast.warning("Бүртгэлтэй хэрэглэгч байна!");
       }
@@ -121,7 +121,7 @@ export const ProfileProvider = ({
   };
   const getCurrentUser = async () => {
     try {
-      const res = await axios.get(`${apiURL}/get/profile`, {
+      const res = await axios.get(`${apiURL}/auth/get/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -138,7 +138,7 @@ export const ProfileProvider = ({
     const { email } = userForm;
     try {
       setIsLoading(true);
-      const res = await axios.post(`${apiURL}/verify/email`, { email });
+      const res = await axios.post(`${apiURL}/auth/verify/email`, { email });
       if (res.status === 400) {
         return toast.error("Бүртгэлгүй хэрэглэгч бна");
       }
@@ -157,7 +157,7 @@ export const ProfileProvider = ({
     try {
       setIsLoading(true);
       const { email } = userForm;
-      const res = await axios.post(`${apiURL}/verify/otp`, { otp, email });
+      const res = await axios.post(`${apiURL}/auth/verify/otp`, { otp, email });
       if (res.status === 400) {
         setIsLoading(false);
         toast.warning(
@@ -186,7 +186,7 @@ export const ProfileProvider = ({
         return toast.warning("password don't match");
       }
       console.log("pass, token", password, resetToken);
-      const res = await axios.post(`${apiURL}/verify/password`, {
+      const res = await axios.post(`${apiURL}/auth/verify/password`, {
         password,
         resetToken,
       });
@@ -203,11 +203,8 @@ export const ProfileProvider = ({
     }
   };
   useEffect(() => {
-    const checkToken = localStorage.getItem("token");
     if (token) {
       getCurrentUser();
-    } else {
-      setToken(checkToken);
     }
   }, [token]);
   return (
