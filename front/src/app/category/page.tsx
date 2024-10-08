@@ -12,6 +12,8 @@ import React, { useContext, useEffect, useState } from "react";
 const Dashboard = () => {
   const { search } = useContext(ProfileContext);
   const [products, setProducts] = useState<Product[] | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
+  const [size, setSize] = useState<string | null>(null);
   const [catList, setCatList] = useState<Product[] | null>(null);
   const getAllProducts = async () => {
     try {
@@ -51,9 +53,12 @@ const Dashboard = () => {
     <div className="py-16 px-[200px] flex">
       <div className="">
         <label className="font-bold text-base">Ангилал</label>
-        <RadioGroup defaultValue="">
-          {catList?.map((data) => (
-            <div className="flex items-center gap-4 w-[180px] mt-6">
+        <RadioGroup
+          defaultValue=""
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          {catList?.map((data, idx) => (
+            <div className="flex items-center gap-4 w-[180px] mt-6" key={idx}>
               <RadioGroupItem value={data._id} id="r1" />
               <Label htmlFor="r1" className="">
                 {data.name}
@@ -62,11 +67,13 @@ const Dashboard = () => {
           ))}
         </RadioGroup>
         <label className="font-bold text-base">Хэмжээ</label>
-        <RadioGroup>
-          <div className="flex items-center gap-4 mt-6">
-            <RadioGroupItem value="" />
-            <Label htmlFor="r1">Default</Label>
-          </div>
+        <RadioGroup onChange={(e) => setSize(e.target.value)}>
+          {["S", "M", "L", "XL", "XXL"].map((sizeOption, idx) => (
+            <div className="flex items-center gap-4 mt-6" key={idx}>
+              <RadioGroupItem value={sizeOption} />
+              <Label htmlFor={`size-${idx}`}>{sizeOption}</Label>
+            </div>
+          ))}
         </RadioGroup>
       </div>
       <div className="grid grid-cols-3 gap-4 ml-10">
