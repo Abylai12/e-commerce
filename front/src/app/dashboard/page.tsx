@@ -1,4 +1,5 @@
-// "use client";
+"use client";
+
 import {
   FeaturedProductCard,
   ProductCard,
@@ -10,40 +11,33 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 
-const Dashboard = async () => {
-  // const [products, setProducts] = useState<Product[] | null>(null);
-  // const [product, setProduct] = useState<Product[] | null>(null);
-  // const [user, setUser] = useState<ILoggedUser | null>(null);
+const Dashboard = () => {
+  const { search } = useContext(ProfileContext);
+  const [products, setProducts] = useState<Product[] | null>(null);
+  const [last, setLast] = useState<Product[] | null>(null);
 
-  // const getAllProducts = async () => {
-  //   try {
-  //     const res = await axios.get(`${apiURL}/get/product`);
-  //     if (res.status === 200) {
-  //       const { products, product } = res.data;
-  //       setProducts(products);
-  //       setProduct(product);
-  //       console.log("object", products);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getAllProducts();
-  // }, []);
-  const res = await fetch(`${apiURL}/get/product`, {
-    cache: "no-store", // Ensure data is fresh every time
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch products");
-  }
-
-  const { products, product } = await res.json();
+  const getAllProducts = async () => {
+    try {
+      const res = await axios.post(`${apiURL}/get/products/search`, {
+        name: search,
+      });
+      if (res.status === 200) {
+        const { products, lastProduct } = res.data;
+        setProducts(products);
+        setLast(lastProduct);
+        console.log("object", products);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAllProducts();
+  }, [search]);
 
   return (
     <div className="mb-8">
-      {product?.map((product: Product, idx: number) => (
+      {last?.map((product: Product, idx: number) => (
         <FeaturedProductCard
           _id={product._id}
           key={idx}

@@ -49,14 +49,18 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
 export const getAllProductsWithSearch = async (req: Request, res: Response) => {
   const { category, size, name } = req.body;
+
   try {
     const query: any = {};
     if (category) query.category = category;
     if (size) query.size = size;
-    if (name) query.name = name;
+    if (name) {
+      query.name = { $regex: new RegExp(name, "i") };
+    }
 
     const products = await Product.find(query);
-    res.status(200).json({ message: "success", products });
+    const lastProduct = await Product.find().sort({ createdAt: -1 }).limit(1);
+    res.status(200).json({ message: "success", products, lastProduct });
   } catch (error) {
     res.status(401).json({ error: "Failed to retrieve products" });
     console.error(error);

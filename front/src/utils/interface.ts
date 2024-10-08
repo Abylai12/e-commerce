@@ -12,4 +12,18 @@ export type Product = {
   _id: string;
 };
 
+export interface IUser {
+  firstName: String;
+  lastName: String;
+  email: string;
+  password: String;
+  repassword: String;
+}
+
+export interface ILoggedUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  profile_img: string;
+}
 // discount: number;

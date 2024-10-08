@@ -12,7 +12,7 @@ import { DropdownMenuDemo } from "./dropdown";
 import Link from "next/link";
 
 const Header = () => {
-  const { user } = useContext(ProfileContext);
+  const { user, setSearch } = useContext(ProfileContext);
   const router = useRouter();
 
   return (
@@ -32,8 +32,9 @@ const Header = () => {
         <Search className="text-white text-2xl" />
         <input
           type="text"
-          className="bg-primary"
+          className="bg-primary text-white"
           placeholder="Бүтээгдэхүүн хайх"
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       <div className="flex items-center gap-6">
