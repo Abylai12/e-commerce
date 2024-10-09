@@ -14,9 +14,10 @@ export const ProductCard = ({
   images,
   discount,
   _id,
+  category,
 }: Product) => {
   return (
-    <Link href={"/detail/" + _id}>
+    <Link href={"/detail/" + _id + "?cat_id=" + category._id}>
       <div className={`relative`}>
         <img src={images} alt="image1" className="rounded-lg h-full w-full" />
         <Heart size={22} strokeWidth={1} className="absolute top-4 right-4" />
@@ -35,9 +36,10 @@ export const FeaturedProductCard = ({
   images,
   discount,
   _id,
+  category,
 }: Product) => {
   return (
-    <Link href={"/detail/" + _id}>
+    <Link href={"/detail/" + _id + "?" + category._id}>
       <div className="relative col-span-2 row-span-10 mb-14">
         <div className="relative  ">
           <img
@@ -56,7 +58,7 @@ export const FeaturedProductCard = ({
   );
 };
 
-const PriceWithDiscount = ({
+export const PriceWithDiscount = ({
   price,
   discount,
 }: {

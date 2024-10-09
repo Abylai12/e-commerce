@@ -19,11 +19,12 @@ const Dashboard = () => {
     try {
       const res = await axios.post(`${apiURL}/get/products/search`, {
         name: search,
+        category,
+        size,
       });
       if (res.status === 200) {
         const { products, lastProduct } = res.data;
         setProducts(products);
-        console.log("object", products);
       }
     } catch (error) {
       console.log(error);
@@ -35,7 +36,6 @@ const Dashboard = () => {
       if (res.status === 200) {
         const { categories } = res.data;
         setCatList(categories);
-        console.log("object", categories);
       }
     } catch (error) {
       console.log(error);
@@ -44,32 +44,45 @@ const Dashboard = () => {
   useEffect(() => {
     getAllProducts();
     getAllCategories();
-  }, [search]);
+  }, [search, size, category]);
   useEffect(() => {
     getAllCategories();
   }, []);
-
   return (
     <div className="py-16 px-[200px] flex">
       <div className="">
         <label className="font-bold text-base">Ангилал</label>
         <RadioGroup
           defaultValue=""
-          onChange={(e) => setCategory(e.target.value)}
+          onValueChange={(value) => setCategory(value)}
         >
+          <div className="flex items-center gap-4 w-[180px] mt-4">
+            <RadioGroupItem value="" />
+            <Label htmlFor="r1" className="">
+              All
+            </Label>
+          </div>
           {catList?.map((data, idx) => (
-            <div className="flex items-center gap-4 w-[180px] mt-6" key={idx}>
-              <RadioGroupItem value={data._id} id="r1" />
+            <div className="flex items-center gap-4 w-[180px] mt-4" key={idx}>
+              <RadioGroupItem value={data._id} />
               <Label htmlFor="r1" className="">
                 {data.name}
               </Label>
             </div>
           ))}
         </RadioGroup>
-        <label className="font-bold text-base">Хэмжээ</label>
-        <RadioGroup onChange={(e) => setSize(e.target.value)}>
+        <div className="mt-6">
+          <label className="font-bold text-base">Хэмжээ</label>
+        </div>
+        <RadioGroup onValueChange={(value) => setSize(value)}>
+          <div className="flex items-center gap-4 w-[180px] mt-4">
+            <RadioGroupItem value="" />
+            <Label htmlFor="r1" className="">
+              All
+            </Label>
+          </div>
           {["S", "M", "L", "XL", "XXL"].map((sizeOption, idx) => (
-            <div className="flex items-center gap-4 mt-6" key={idx}>
+            <div className="flex items-center gap-4 mt-4" key={idx}>
               <RadioGroupItem value={sizeOption} />
               <Label htmlFor={`size-${idx}`}>{sizeOption}</Label>
             </div>
@@ -80,6 +93,7 @@ const Dashboard = () => {
         {products?.map((product: Product, idx: number) => (
           <div key={idx}>
             <ProductCard
+              category={product.category}
               _id={product._id}
               discount={product.discount}
               name={product.name}

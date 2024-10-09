@@ -39,6 +39,7 @@ const Dashboard = () => {
     <div className="mb-8">
       {last?.map((product: Product, idx: number) => (
         <FeaturedProductCard
+          category={product.category}
           _id={product._id}
           key={idx}
           name={product.name}
@@ -57,6 +58,7 @@ const Dashboard = () => {
             className={idx === 6 || idx === 7 ? "col-span-2 row-span-2" : ""}
           >
             <ProductCard
+              category={product.category}
               _id={product._id}
               discount={product.discount}
               name={product.name}

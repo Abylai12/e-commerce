@@ -58,8 +58,11 @@ export const getAllProductsWithSearch = async (req: Request, res: Response) => {
       query.name = { $regex: new RegExp(name, "i") };
     }
 
-    const products = await Product.find(query);
-    const lastProduct = await Product.find().sort({ createdAt: -1 }).limit(1);
+    const products = await Product.find(query).populate("category");
+    const lastProduct = await Product.find()
+      .sort({ createdAt: -1 })
+      .populate("category")
+      .limit(1);
     res.status(200).json({ message: "success", products, lastProduct });
   } catch (error) {
     res.status(401).json({ error: "Failed to retrieve products" });
@@ -69,10 +72,11 @@ export const getAllProductsWithSearch = async (req: Request, res: Response) => {
 
 export const getProductDetail = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { category } = req.body;
+  const { cat_id } = req.query;
+  // localhost:8000/api/v1/productid?categoryId={categoryId}
   try {
-    const productDetail = await Product.find({ id });
-    const products = await Product.find({ category }).limit(8);
+    const productDetail = await Product.findById(id);
+    const products = await Product.find({ cat_id }).limit(8);
     res.status(200).json({ message: "success", productDetail, products });
   } catch (error) {
     res.status(401).json({ error: "Failed to retrieve products" });

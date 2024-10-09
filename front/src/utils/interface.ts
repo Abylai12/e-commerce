@@ -4,12 +4,24 @@ export interface IGet {
   handleLogIn: () => void;
 }
 
+type catObj = {
+  _id: string;
+};
 export type Product = {
   name: string;
+  description?: string;
   price: number;
   images: string;
   discount: number;
   _id: string;
+  category: catObj;
+};
+export type IProduct = {
+  name?: string;
+  description?: string;
+  price?: number;
+  images?: string;
+  discount?: number;
 };
 
 export interface IUser {
