@@ -75,7 +75,7 @@ export const getProductDetail = async (req: Request, res: Response) => {
   const { cat_id } = req.query;
   // localhost:8000/api/v1/productid?categoryId={categoryId}
   try {
-    const productDetail = await Product.findById(id);
+    const productDetail = await Product.find({ _id: id });
     const products = await Product.find({ cat_id }).limit(8);
     res.status(200).json({ message: "success", productDetail, products });
   } catch (error) {

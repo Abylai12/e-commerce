@@ -17,11 +17,12 @@ export type Product = {
   category: catObj;
 };
 export type IProduct = {
-  name?: string;
-  description?: string;
-  price?: number;
-  images?: string;
-  discount?: number;
+  name: string;
+  description: string;
+  price: number;
+  images: [];
+  discount: number;
+  isNew: boolean;
 };
 
 export interface IUser {
