@@ -1,10 +1,11 @@
 import { model, Schema } from "mongoose";
 
 interface IComment {
-  comment: [
+  comments: [
     {
       userName: string;
       description: string;
+      rating: number;
     }
   ];
   product_id: Schema.Types.ObjectId;
@@ -12,7 +13,7 @@ interface IComment {
 
 const commentSchema = new Schema<IComment>(
   {
-    comment: [
+    comments: [
       {
         userName: {
           type: String,
@@ -20,17 +21,18 @@ const commentSchema = new Schema<IComment>(
         },
         description: {
           type: String,
-          required: [true, "Хэрэглэгчийн нэр оруулах"],
+          required: [true, "Сэтгэгдэл оруулах"],
+        },
+        rating: {
+          type: Number,
         },
       },
     ],
-    product_id: [
-      {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "Product",
-      },
-    ],
+    product_id: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "Product",
+    },
   },
   {
     timestamps: true,

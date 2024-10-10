@@ -7,6 +7,7 @@ import crypto from "crypto";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  console.log("first", email, password);
   try {
     const user = await User.findOne({ email });
     if (!user) {

@@ -14,6 +14,7 @@ import Link from "next/link";
 const Header = () => {
   const { user, setSearch } = useContext(ProfileContext);
   const router = useRouter();
+  console.log("first", user);
 
   return (
     <section className="flex bg-black px-6 py-4 justify-between">

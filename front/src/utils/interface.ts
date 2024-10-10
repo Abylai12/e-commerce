@@ -20,7 +20,7 @@ export type IProduct = {
   name: string;
   description: string;
   price: number;
-  images: [];
+  images: [string];
   discount: number;
   isNew: boolean;
 };

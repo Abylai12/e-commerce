@@ -24,6 +24,7 @@ interface ProfileContextType {
   isLoading: boolean;
   user: ILoggedUser | null;
   search: string | null;
+  userForm: IUser;
 }
 export const ProfileContext = createContext<ProfileContextType>({
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
@@ -41,6 +42,13 @@ export const ProfileContext = createContext<ProfileContextType>({
   isLoading: false,
   user: null,
   search: null,
+  userForm: {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    repassword: "",
+  },
 });
 
 export const ProfileProvider = ({
@@ -93,14 +101,13 @@ export const ProfileProvider = ({
 
   const logInUser = async () => {
     try {
-      const res = await axios.post(`${apiURL}/auth/login`, userForm);
+      const res = await axios.post(`${apiURL}auth/login`, userForm);
       if (res.status === 400) {
         toast.warning("Бүртгэлтэй хэрэглэгч байна!");
       }
       if (res.status === 200) {
         const { token, user } = res.data;
         localStorage.setItem("token", token);
-        console.log("token", token);
         toast.success("User successfully signed in");
         router.push("/dashboard");
       } else {
@@ -113,7 +120,7 @@ export const ProfileProvider = ({
   };
   const getCurrentUser = async () => {
     try {
-      const res = await axios.get(`${apiURL}/auth/get/profile`, {
+      const res = await axios.get(`${apiURL}auth/get/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -121,6 +128,7 @@ export const ProfileProvider = ({
       if (res.status === 200) {
         const { user } = res.data;
         setUser(user);
+        console.log("user", user);
       }
     } catch (error) {
       console.log(error);
@@ -177,7 +185,6 @@ export const ProfileProvider = ({
       if (password !== repassword) {
         return toast.warning("password don't match");
       }
-      console.log("pass, token", password, resetToken);
       const res = await axios.post(`${apiURL}/auth/verify/password`, {
         password,
         resetToken,
@@ -196,6 +203,7 @@ export const ProfileProvider = ({
   };
 
   useEffect(() => {
+    setToken(localStorage.getItem("token"));
     if (token) {
       getCurrentUser();
     }
@@ -214,6 +222,7 @@ export const ProfileProvider = ({
         isLoading,
         user,
         search,
+        userForm,
       }}
     >
       {children}

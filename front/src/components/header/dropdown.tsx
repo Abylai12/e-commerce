@@ -30,11 +30,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // imgURl: string
 export const DropdownMenuDemo = ({ imgURl }: { imgURl: string }) => {
+  const router = useRouter();
   const handleClick = () => {
     localStorage.removeItem("token");
+    router.push("/dashboard");
   };
   return (
     <DropdownMenu>

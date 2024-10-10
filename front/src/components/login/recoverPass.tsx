@@ -12,21 +12,29 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { formSchema } from "@/utils/validationSchema";
-import { form } from "@/utils/validationSchema";
 import { ProfileContext } from "@/context/profile-context";
 import { useSearchParams } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
-// type LogInProps = {
-//   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
-//   handleClick: () => void;
-// };
+const form = useForm<z.infer<typeof formSchema>>({
+  resolver: zodResolver(formSchema),
+  defaultValues: {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    repassword: "",
+    phoneNumber: "",
+    address: "",
+  },
+});
 const RecoverPass = () => {
   const { verifyUserPassword } = useContext(ProfileContext);
   const searchParams = useSearchParams();
   const resetToken = searchParams.get("resetToken");
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     verifyUserPassword(resetToken, values);
-    console.log(values);
   };
   return (
     <div className="flex justify-center items-center w-full heightcalc">
