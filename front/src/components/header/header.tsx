@@ -10,11 +10,43 @@ import { useRouter } from "next/navigation";
 import { ProfileContext } from "@/context/profile-context";
 import { DropdownMenuDemo } from "./dropdown";
 import Link from "next/link";
+import axios from "axios";
+import { apiURL } from "@/utils/apiHome";
+import { set } from "date-fns";
 
+// type ListSave = {
+//   product_id: string;
+//   _id: string;
+// };
 const Header = () => {
-  const { user, setSearch } = useContext(ProfileContext);
+  const { user, setSearch, productId, list, setList } =
+    useContext(ProfileContext);
   const router = useRouter();
-  console.log("first", user);
+
+  const getSaveList = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return;
+      }
+      const res = await axios.get(`${apiURL}save/product`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        const { ids } = res.data;
+        setList(ids);
+        console.log("object", ids);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    console.log("refreshh");
+    getSaveList();
+  }, [productId]);
 
   return (
     <section className="flex bg-black px-6 py-4 justify-between">
@@ -39,7 +71,14 @@ const Header = () => {
         />
       </div>
       <div className="flex items-center gap-6">
-        <Heart className="text-white" />
+        <Link href="/save">
+          <div className="relative">
+            <Heart className="text-white" />
+            <div className="absolute -top-1/4 -right-1/4 bg-blue-400 rounded-full text-[10px] w-4 h-4 flex items-center justify-center text-white">
+              {list?.length}
+            </div>
+          </div>
+        </Link>
         <ShoppingCart className="text-white" />
 
         {!user ? (

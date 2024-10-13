@@ -5,45 +5,49 @@ import { apiURL } from "@/utils/apiHome";
 import { Rating } from "@smastrom/react-rating";
 import axios from "axios";
 import { useParams, useSearchParams } from "next/navigation";
-import React, { useContext, useState } from "react";
+import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { number } from "zod";
 
-export const RateComment = ({ isOpen }: { isOpen: boolean }) => {
-  const { user } = useContext(ProfileContext);
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState<string | null>(null);
-  const product_id = useParams();
-
-  const postComment = async () => {
-    if (!comment) {
-      return toast.warning("comment bichenee uu");
-    }
-    const commentForm = {
-      userName: user?.firstName,
-      description: comment,
-      rating: rating,
-    };
-    try {
-      const res = await axios.post(
-        `${apiURL}user/comment`,
-        commentForm,
-        product_id
-      );
-      if (res.status === 200) {
-        toast.success("amjillttai ilgeelee");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+interface IComments {
+  userName: string;
+  description: string;
+  rating: number;
+}
+export const RateComment = ({
+  isOpen,
+  comments,
+  comment,
+  rating,
+  setRating,
+  setComment,
+  handleClick,
+}: {
+  isOpen: boolean;
+  comments: IComments[] | null;
+  comment: string | null;
+  rating: number;
+  setRating: Dispatch<SetStateAction<number>>;
+  setComment: Dispatch<SetStateAction<string | null>>;
+  handleClick: () => void;
+}) => {
   return (
     <div className={isOpen ? "hidden" : ""}>
       <div className="border-b-2 border-dashed px-4 py-3 font-mono text-sm flex flex-col mb-2">
-        <h5>Saraa</h5>
-        <p className="text-xs text-gray-400">
-          Ваав материал ёстой гоё байна 😍
-        </p>
+        {comments?.map(({ description, userName, rating }, idx) => (
+          <div className="" key={idx}>
+            <div className="flex items-center gap-2">
+              <h5>{userName}</h5>
+              <Rating
+                className="w-6 h-6"
+                style={{ maxWidth: 80, padding: 0 }}
+                value={rating}
+                isRequired
+              />
+            </div>
+            <p className="text-xs text-gray-400">{description}</p>
+          </div>
+        ))}
       </div>
       <div className="bg-slate-100 border rounded-xl h-56 p-4 flex flex-col justify-between">
         <h4 className="text-sm font-medium">Одоор үнэлэх:</h4>
@@ -60,10 +64,14 @@ export const RateComment = ({ isOpen }: { isOpen: boolean }) => {
             placeholder="Энд бичнэ үү"
             name="description"
             className="h-16 w-full border rounded-[9px] p-2 text-xs"
+            value={comment || ""}
             onChange={(e) => setComment(e.target.value)}
           />
         </div>
-        <button className="w-24 h-7 border rounded-full bg-blue-700 text-white text-sm">
+        <button
+          className="w-24 h-7 border rounded-full bg-blue-700 text-white text-sm"
+          onClick={handleClick}
+        >
           Үнэлэх
         </button>
       </div>

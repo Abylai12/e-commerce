@@ -90,22 +90,20 @@ const Dashboard = () => {
         </RadioGroup>
       </div>
       <div className="grid grid-cols-3 gap-4 ml-10">
-        {products?.map((product: Product, idx: number) => (
-          <div key={idx}>
-            <ProductCard
-              category={product.category}
-              _id={product._id}
-              discount={product.discount}
-              name={product.name}
-              price={product.price}
-              images={
-                product.images && product.images.length > 0
-                  ? product.images[0]
-                  : ""
-              }
-            />
-          </div>
-        ))}
+        {products?.map(
+          ({ category, _id, discount, name, price, images }, idx) => (
+            <div key={idx}>
+              <ProductCard
+                category={category}
+                _id={_id}
+                discount={discount}
+                name={name}
+                price={price}
+                images={images}
+              />
+            </div>
+          )
+        )}
       </div>
     </div>
   );

@@ -25,7 +25,6 @@ const Dashboard = () => {
         const { products, lastProduct } = res.data;
         setProducts(products);
         setLast(lastProduct);
-        console.log("object", products);
       }
     } catch (error) {
       console.log(error);
@@ -37,40 +36,36 @@ const Dashboard = () => {
 
   return (
     <div className="mb-8">
-      {last?.map((product: Product, idx: number) => (
+      {last?.map(({ category, _id, name, discount, price, images }, idx) => (
         <FeaturedProductCard
-          category={product.category}
-          _id={product._id}
+          category={category}
+          _id={_id}
           key={idx}
-          name={product.name}
-          discount={product.discount}
-          price={product.price}
-          images={
-            product.images && product.images.length > 0 ? product.images[0] : ""
-          }
+          name={name}
+          discount={discount}
+          price={price}
+          images={images}
         />
       ))}
 
       <div className="grid grid-cols-4  grid-rows- gap-4 px-[200px] py-5">
-        {products?.map((product: Product, idx: number) => (
-          <div
-            key={idx}
-            className={idx === 6 || idx === 7 ? "col-span-2 row-span-2" : ""}
-          >
-            <ProductCard
-              category={product.category}
-              _id={product._id}
-              discount={product.discount}
-              name={product.name}
-              price={product.price}
-              images={
-                product.images && product.images.length > 0
-                  ? product.images[0]
-                  : ""
-              }
-            />
-          </div>
-        ))}
+        {products?.map(
+          ({ category, _id, discount, name, price, images }, idx) => (
+            <div
+              key={idx}
+              className={idx === 6 || idx === 7 ? "col-span-2 row-span-2" : ""}
+            >
+              <ProductCard
+                category={category}
+                _id={_id}
+                discount={discount}
+                name={name}
+                price={price}
+                images={images}
+              />
+            </div>
+          )
+        )}
       </div>
     </div>
   );

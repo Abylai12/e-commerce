@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { IProduct } from "@/utils/interface";
@@ -7,6 +7,21 @@ import { Heart } from "lucide-react";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { RateComment } from "./rating";
+import axios from "axios";
+import { apiURL } from "@/utils/apiHome";
+import { useParams } from "next/navigation";
+import { ProfileContext } from "@/context/profile-context";
+import { toast } from "react-toastify";
+
+interface IComments {
+  userName: string;
+  description: string;
+  rating: number;
+}
+type ratingData = {
+  ratingAVG: number;
+  length: number;
+};
 
 const DetailCart = ({
   images,
@@ -16,8 +31,61 @@ const DetailCart = ({
   price,
   discount,
 }: IProduct) => {
+  const { user } = useContext(ProfileContext);
   const [count, setCount] = useState<number>(1);
   const [open, setOpen] = useState<boolean>(true);
+  const [comments, setComments] = useState<IComments[] | null>(null);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState<string | null>("");
+  const [value, setValue] = useState<ratingData | null>(null);
+
+  const { id } = useParams();
+
+  const getAllComments = async () => {
+    try {
+      const res = await axios.get(`${apiURL}user/comment/${id}`);
+      if (res.status === 200) {
+        const { comments, ratingAVG, length } = res.data;
+        setComments(comments);
+        setValue({
+          ratingAVG: ratingAVG,
+          length: length,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const createComment = async () => {
+    if (!comment) {
+      return toast.warning("Сэтгэгдэл талбар хоосон байна");
+    }
+    if (!user) {
+      return toast.error("Нэвтэрсэн хэрэглэгч сэтгэгдэл үлдээх боломжтой");
+    }
+    const commentForm = {
+      userName: user?.firstName,
+      description: comment,
+      rating: rating,
+    };
+
+    try {
+      const res = await axios.post(`${apiURL}user/comment`, {
+        commentForm,
+        id,
+      });
+      if (res.status === 200) {
+        toast.success("amjillttai ilgeelee");
+        setComment("");
+        setRating(0);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleClick = () => {
+    createComment();
+  };
 
   const handleSub = () => {
     if (count > 0) {
@@ -27,12 +95,16 @@ const DetailCart = ({
     }
   };
   const handleOpen = () => {
+    getAllComments();
     if (!open) {
       setOpen(true);
     } else {
       setOpen(false);
     }
   };
+  useEffect(() => {
+    getAllComments();
+  }, [comment]);
   return (
     <section>
       <div className="grid grid-cols-2 gap-5">
@@ -116,16 +188,24 @@ const DetailCart = ({
               <Rating
                 className="w-5 h-5"
                 style={{ maxWidth: 120 }}
-                value={3}
+                value={value?.ratingAVG ?? 0}
                 isRequired
               />
-              <span className="text-sm text-[#09090B]">4.6</span>
-              <span className="text-sm">(24)</span>
+              <span className="text-sm text-[#09090B]">{value?.ratingAVG}</span>
+              <span className="text-sm">сэтгэгдэл ({value?.length})</span>
             </div>
           </div>
         </div>
         <div></div>
-        <RateComment isOpen={open} />
+        <RateComment
+          handleClick={handleClick}
+          setComment={setComment}
+          comment={comment}
+          rating={rating}
+          setRating={setRating}
+          comments={comments}
+          isOpen={open}
+        />
       </div>
     </section>
   );

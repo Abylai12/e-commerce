@@ -9,39 +9,51 @@ import { useState } from "react";
 import { headers } from "next/headers";
 import { ILoggedUser, IUser } from "@/utils/interface";
 
+interface ISaveList {
+  product_id: string;
+  _id: string;
+}
 interface ProfileContextType {
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   logInUser: () => void;
-  logUpUser: (zodValue: IUser) => void;
   verifyUserEmail: () => void;
   verifyUserOtp: (otp: string) => Promise<void>;
   getCurrentUser: () => void;
   setSearch: Dispatch<SetStateAction<string | null>>;
+  setUser: Dispatch<SetStateAction<ILoggedUser | null>>;
+  setProductId: Dispatch<SetStateAction<string | null>>;
+  setList: Dispatch<SetStateAction<ISaveList[] | null>>;
   verifyUserPassword: (
     resetToken: string | null,
     formValues: IUser
   ) => Promise<Id | undefined>;
+  productId: string | null;
   isLoading: boolean;
   user: ILoggedUser | null;
   search: string | null;
+  list: ISaveList[] | null;
   userForm: IUser;
 }
 export const ProfileContext = createContext<ProfileContextType>({
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
   logInUser: () => {},
-  logUpUser: (zodValue: IUser) => {},
   verifyUserEmail: () => {},
   verifyUserOtp: async (otp: string) => {},
   getCurrentUser: () => {},
   setSearch: () => {},
+  setUser: () => {},
+  setList: () => {},
+  setProductId: () => {},
   verifyUserPassword: async (resetToken: string | null, formValues: IUser) => {
     if (!resetToken) {
       return toast.warning("password don't match");
     }
   },
+  productId: null,
   isLoading: false,
   user: null,
   search: null,
+  list: null,
   userForm: {
     firstName: "",
     lastName: "",
@@ -69,6 +81,8 @@ export const ProfileProvider = ({
   });
 
   const [search, setSearch] = useState<string | null>(null);
+  const [productId, setProductId] = useState<string | null>(null);
+  const [list, setList] = useState<ISaveList[] | null>(null); //hadgalsan baraag setleh
 
   const handleLogForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -76,27 +90,6 @@ export const ProfileProvider = ({
       ...userForm,
       [name]: value,
     });
-  };
-  const logUpUser = async (zodValue: IUser) => {
-    try {
-      const { firstName, lastName, repassword, email, password } = zodValue;
-      if (password !== repassword) {
-        return toast.error("Нууц үг хоорондоо нийцэхгүй байна");
-      }
-
-      const newForm = { email, password, firstName, lastName };
-      const res = await axios.post(`${apiURL}/auth/logup`, newForm);
-
-      if (res.status === 200) {
-        toast.success("Хэрэглэгч амжилттай бүртгэгдлээ");
-        router.push("/Login");
-      } else {
-        toast.error("Бүртгэлтэй хэрэглэгч байна!");
-      }
-    } catch (error) {
-      console.log("error", error);
-      toast.warning("Failed to sign in. Please try again.");
-    }
   };
 
   const logInUser = async () => {
@@ -108,6 +101,7 @@ export const ProfileProvider = ({
       if (res.status === 200) {
         const { token, user } = res.data;
         localStorage.setItem("token", token);
+        setToken(token);
         toast.success("User successfully signed in");
         router.push("/dashboard");
       } else {
@@ -128,7 +122,6 @@ export const ProfileProvider = ({
       if (res.status === 200) {
         const { user } = res.data;
         setUser(user);
-        console.log("user", user);
       }
     } catch (error) {
       console.log(error);
@@ -203,22 +196,27 @@ export const ProfileProvider = ({
   };
 
   useEffect(() => {
-    setToken(localStorage.getItem("token"));
     if (token) {
       getCurrentUser();
+    } else {
+      setToken(localStorage.getItem("token"));
     }
   }, [token]);
   return (
     <ProfileContext.Provider
       value={{
         handleLogForm,
-        logUpUser,
         logInUser,
         verifyUserEmail,
         verifyUserOtp,
         verifyUserPassword,
         getCurrentUser,
         setSearch,
+        setUser,
+        setProductId,
+        setList,
+        list,
+        productId,
         isLoading,
         user,
         search,

@@ -2,7 +2,11 @@ import { model, Schema } from "mongoose";
 
 interface ISaveProduct {
   user_id: Schema.Types.ObjectId;
-  product_id: [Schema.Types.ObjectId];
+  products_id: [
+    {
+      product_id: Schema.Types.ObjectId;
+    }
+  ];
 }
 
 const saveProductSchema = new Schema<ISaveProduct>(
@@ -12,11 +16,13 @@ const saveProductSchema = new Schema<ISaveProduct>(
       required: true,
       ref: "User",
     },
-    product_id: [
+    products_id: [
       {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "Product",
+        product_id: {
+          type: Schema.Types.ObjectId,
+          required: true,
+          ref: "Product",
+        },
       },
     ],
   },
@@ -25,5 +31,5 @@ const saveProductSchema = new Schema<ISaveProduct>(
   }
 );
 
-const SaveProduct = model<ISaveProduct>("Category", saveProductSchema);
+const SaveProduct = model<ISaveProduct>("SaveProduct", saveProductSchema);
 export default SaveProduct;

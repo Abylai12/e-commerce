@@ -58,7 +58,7 @@ export const getAllProductsWithSearch = async (req: Request, res: Response) => {
       query.name = { $regex: new RegExp(name, "i") };
     }
 
-    const products = await Product.find(query).populate("category");
+    const products = await Product.find(query);
     const lastProduct = await Product.find()
       .sort({ createdAt: -1 })
       .populate("category")
@@ -79,7 +79,26 @@ export const getProductDetail = async (req: Request, res: Response) => {
     const products = await Product.find({ cat_id }).limit(8);
     res.status(200).json({ message: "success", productDetail, products });
   } catch (error) {
-    res.status(401).json({ error: "Failed to retrieve products" });
+    res.status(400).json({ error: "Failed to retrieve products" });
+    console.error(error);
+  }
+};
+
+export const getSaveProducts = async (req: Request, res: Response) => {
+  const { id } = req.user;
+  const { arr } = req.body;
+  console.log("ids", id, arr);
+
+  try {
+    const products = await Product.find({
+      _id: { $in: arr },
+    });
+    if (!products) {
+      return res.status(202).json({ message: "Хадгалсан бараа байхгүй байна" });
+    }
+    res.status(200).json({ message: "success", products });
+  } catch (error) {
+    res.status(400).json({ error: "failed" });
     console.error(error);
   }
 };

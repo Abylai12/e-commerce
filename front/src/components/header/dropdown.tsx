@@ -31,12 +31,16 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { ProfileContext } from "@/context/profile-context";
 
 // imgURl: string
 export const DropdownMenuDemo = ({ imgURl }: { imgURl: string }) => {
+  const { setUser } = useContext(ProfileContext);
   const router = useRouter();
   const handleClick = () => {
     localStorage.removeItem("token");
+    setUser(null);
     router.push("/dashboard");
   };
   return (

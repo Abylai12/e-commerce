@@ -11,14 +11,39 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ProfileContext } from "@/context/profile-context";
 import { z } from "zod";
 import { formSchema } from "@/utils/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { IUser } from "@/utils/interface";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { apiURL } from "@/utils/apiHome";
+import { useRouter } from "next/navigation";
 
 export const LogUp = () => {
-  const { logUpUser } = useContext(ProfileContext);
+  const router = useRouter();
+  const logUpUser = async (zodValue: IUser) => {
+    try {
+      const { firstName, lastName, repassword, email, password } = zodValue;
+      if (password !== repassword) {
+        return toast.error("Нууц үг хоорондоо нийцэхгүй байна");
+      }
+
+      const newForm = { email, password, firstName, lastName };
+      const res = await axios.post(`${apiURL}/auth/logup`, newForm);
+
+      if (res.status === 200) {
+        toast.success("Хэрэглэгч амжилттай бүртгэгдлээ");
+        router.push("/Login");
+      } else {
+        toast.error("Бүртгэлтэй хэрэглэгч байна!");
+      }
+    } catch (error) {
+      console.log("error", error);
+      toast.warning("Failed to sign in. Please try again.");
+    }
+  };
 
   // 2. Define a submit handler.
   const onSubmit = (values: z.infer<typeof formSchema>) => {

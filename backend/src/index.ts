@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import authRoute from "./routes/authRoute";
 import catRoute from "./routes/categoryRoute";
 import productRoute from "./routes/productRoute";
+import commentRoute from "./routes/commentRoute";
+import saveProductRoute from "./routes/saveCartRoute";
 import { connectDB } from "./config/db";
 import cors from "cors";
 
@@ -25,6 +27,8 @@ app.get("/", async (req: Request, res: Response) => {
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1", catRoute);
 app.use("/api/v1", productRoute);
+app.use("/api/v1", commentRoute);
+app.use("/api/v1", saveProductRoute);
 connectDB(MONGO_URI);
 
 app.listen(PORT, () => {
