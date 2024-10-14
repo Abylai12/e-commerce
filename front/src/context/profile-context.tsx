@@ -7,10 +7,10 @@ import { Id, toast } from "react-toastify";
 import { apiURL } from "@/utils/apiHome";
 import { useState } from "react";
 import { headers } from "next/headers";
-import { ILoggedUser, IUser } from "@/utils/interface";
+import { ILoggedUser, IUser, Product, SaveProduct } from "@/utils/interface";
 
-interface ISaveList {
-  product_id: string;
+interface ISave {
+  product_id: SaveProduct;
   _id: string;
 }
 interface ProfileContextType {
@@ -22,7 +22,7 @@ interface ProfileContextType {
   setSearch: Dispatch<SetStateAction<string | null>>;
   setUser: Dispatch<SetStateAction<ILoggedUser | null>>;
   setProductId: Dispatch<SetStateAction<string | null>>;
-  setList: Dispatch<SetStateAction<ISaveList[] | null>>;
+  setList: Dispatch<SetStateAction<ISave[] | null>>;
   verifyUserPassword: (
     resetToken: string | null,
     formValues: IUser
@@ -31,7 +31,7 @@ interface ProfileContextType {
   isLoading: boolean;
   user: ILoggedUser | null;
   search: string | null;
-  list: ISaveList[] | null;
+  list: ISave[] | null;
   userForm: IUser;
 }
 export const ProfileContext = createContext<ProfileContextType>({
@@ -82,7 +82,7 @@ export const ProfileProvider = ({
 
   const [search, setSearch] = useState<string | null>(null);
   const [productId, setProductId] = useState<string | null>(null);
-  const [list, setList] = useState<ISaveList[] | null>(null); //hadgalsan baraag setleh
+  const [list, setList] = useState<ISave[] | null>(null); //hadgalsan baraag setleh
 
   const handleLogForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -140,7 +140,7 @@ export const ProfileProvider = ({
         setIsLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.warning("Failed to sign in. Please try again.");
       setIsLoading(false);
     }

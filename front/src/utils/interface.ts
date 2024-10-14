@@ -21,6 +21,7 @@ export type Product = {
   category: string;
 };
 export type IProduct = {
+  _id: string;
   name: string;
   description: string;
   price: number;

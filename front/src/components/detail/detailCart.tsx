@@ -12,6 +12,8 @@ import { apiURL } from "@/utils/apiHome";
 import { useParams } from "next/navigation";
 import { ProfileContext } from "@/context/profile-context";
 import { toast } from "react-toastify";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "../ui/label";
 
 interface IComments {
   userName: string;
@@ -24,6 +26,7 @@ type ratingData = {
 };
 
 const DetailCart = ({
+  _id,
   images,
   isNew,
   name,
@@ -37,13 +40,35 @@ const DetailCart = ({
   const [comments, setComments] = useState<IComments[] | null>(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState<string | null>("");
+  const [size, setSize] = useState<string | null>(null);
   const [value, setValue] = useState<ratingData | null>(null);
-
   const { id } = useParams();
 
   const getAllComments = async () => {
     try {
       const res = await axios.get(`${apiURL}user/comment/${id}`);
+      if (res.status === 200) {
+        const { comments, ratingAVG, length } = res.data;
+        setComments(comments);
+        setValue({
+          ratingAVG: ratingAVG,
+          length: length,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const createProductCart = async (_id: string) => {
+    if (!size) {
+      return toast.warning("size aa songono uu");
+    }
+    try {
+      const res = await axios.post(`${apiURL}create/product/`, {
+        _id,
+        size,
+        count,
+      });
       if (res.status === 200) {
         const { comments, ratingAVG, length } = res.data;
         setComments(comments);
@@ -102,6 +127,16 @@ const DetailCart = ({
       setOpen(false);
     }
   };
+  const handleSize = (sizeOption: string) => {
+    if (size === sizeOption) {
+      setSize(null);
+    } else {
+      setSize(sizeOption);
+    }
+  };
+  const handleProductCart = (id: string) => {
+    createProductCart(id);
+  };
   useEffect(() => {
     getAllComments();
   }, [comment]);
@@ -123,7 +158,7 @@ const DetailCart = ({
                   img ??
                   "https://images.unsplash.com/photo-1719937206255-cc337bccfc7d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8"
                 }
-                alt=""
+                alt="img"
                 className="w-[67px] h-[67px] rounded-sm"
                 key={idx}
               />
@@ -144,8 +179,13 @@ const DetailCart = ({
             <div className="flex gap-2">
               {["S", "M", "L", "XL", "XXL"].map((sizeOption, idx) => (
                 <Button
-                  className="rounded-full bg-transparent border border-black text-black dark:text-white dark:border-white w-8 h-8"
+                  className={`${
+                    size === sizeOption ? "bg-primary/90" : "  bg-transparent"
+                  } rounded-full  border border-black  text-black dark:text-white  dark:border-white w-8 h-8`}
                   key={idx}
+                  onClick={() => {
+                    handleSize(sizeOption);
+                  }}
                 >
                   {sizeOption}
                 </Button>
@@ -171,7 +211,14 @@ const DetailCart = ({
             <div className="flex gap-2 items-center mb-2">
               <PriceWithDiscount price={price} discount={discount ?? 0} />
             </div>
-            <Button className="bg-[#2563EB]">Сагсанд нэмэх</Button>
+            <Button
+              className="bg-[#2563EB]"
+              onClick={() => {
+                handleProductCart(_id);
+              }}
+            >
+              Сагсанд нэмэх
+            </Button>
           </div>
           <div>
             <div className="mb-1">

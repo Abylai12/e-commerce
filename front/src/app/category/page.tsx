@@ -17,7 +17,7 @@ const Dashboard = () => {
   const [catList, setCatList] = useState<Product[] | null>(null);
   const getAllProducts = async () => {
     try {
-      const res = await axios.post(`${apiURL}/get/products/search`, {
+      const res = await axios.post(`${apiURL}get/products/search`, {
         name: search,
         category,
         size,
@@ -32,7 +32,7 @@ const Dashboard = () => {
   };
   const getAllCategories = async () => {
     try {
-      const res = await axios.get(`${apiURL}/category`);
+      const res = await axios.get(`${apiURL}category`);
       if (res.status === 200) {
         const { categories } = res.data;
         setCatList(categories);

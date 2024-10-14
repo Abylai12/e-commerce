@@ -35,9 +35,8 @@ const Header = () => {
         },
       });
       if (res.status === 200) {
-        const { ids } = res.data;
-        setList(ids);
-        console.log("object", ids);
+        const { products } = res.data;
+        setList(products);
       }
     } catch (error) {
       console.error(error);
@@ -71,12 +70,16 @@ const Header = () => {
         />
       </div>
       <div className="flex items-center gap-6">
-        <Link href="/save">
+        <Link href={user ? "/save" : "/"}>
           <div className="relative">
             <Heart className="text-white" />
-            <div className="absolute -top-1/4 -right-1/4 bg-blue-400 rounded-full text-[10px] w-4 h-4 flex items-center justify-center text-white">
-              {list?.length}
-            </div>
+            {list?.length === 0 ? (
+              <></>
+            ) : (
+              <div className="absolute -top-1/4 -right-1/4 bg-blue-400 rounded-full text-[10px] w-4 h-4 flex items-center justify-center text-white">
+                {list?.length}
+              </div>
+            )}
           </div>
         </Link>
         <ShoppingCart className="text-white" />

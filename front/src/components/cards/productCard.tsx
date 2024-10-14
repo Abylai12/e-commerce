@@ -36,8 +36,10 @@ export const ProductCard = ({
           },
         }
       );
+
       if (res.status === 200) {
         toast.success("Бараа амжилттай хадгалагдлаа");
+        setProductId(product_id);
       }
       if (res.status === 201) {
         toast.success("Хадгалсан бараа байна");
@@ -50,28 +52,29 @@ export const ProductCard = ({
   const handleSave = (id: string) => {
     createSaveProduct(id);
     console.log("id");
-    setProductId(id);
   };
   return (
-    <div className={`relative`}>
-      <Link href={"/detail/" + _id + "?cat_id=" + category}>
-        <img
-          src={images[0]}
-          alt="image1"
-          className="rounded-lg h-full w-full"
-        />
-        <div className="mt-2">
-          <h3 className="font-light">{name}</h3>
-          <PriceWithDiscount price={price} discount={discount} />
-        </div>
-      </Link>
-      <button onClick={() => handleSave(_id)}>
-        <Heart
-          size={22}
-          strokeWidth={1}
-          className="absolute top-4 right-4 hover:fill-inherit"
-        />
-      </button>
+    <div>
+      <div className={`relative`}>
+        <Link href={"/detail/" + _id + "?cat_id=" + category}>
+          <img
+            src={images[0]}
+            alt="image1"
+            className="rounded-lg h-full w-full"
+          />
+          <div className="mt-2">
+            <h3 className="font-light">{name}</h3>
+            <PriceWithDiscount price={price} discount={discount} />
+          </div>
+        </Link>
+        <button onClick={() => handleSave(_id)}>
+          <Heart
+            size={22}
+            strokeWidth={1}
+            className="absolute top-4 right-4 hover:fill-inherit"
+          />
+        </button>
+      </div>
     </div>
   );
 };
@@ -145,6 +148,7 @@ export const SaveListCart = ({
   images,
   discount,
 }: SaveProduct) => {
+  const { setProductId } = useContext(ProfileContext);
   const deleteSaveProduct = async (product_id: string) => {
     const token = localStorage.getItem("token");
     try {
@@ -159,6 +163,7 @@ export const SaveListCart = ({
       );
       if (res.status === 200) {
         toast.success("Бараа амжилттай устгахдлаа");
+        setProductId(product_id);
       }
     } catch (error) {
       toast.error("Нэвтэрнэ үү");

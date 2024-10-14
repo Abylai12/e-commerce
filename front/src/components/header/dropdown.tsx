@@ -39,8 +39,9 @@ export const DropdownMenuDemo = ({ imgURl }: { imgURl: string }) => {
   const { setUser } = useContext(ProfileContext);
   const router = useRouter();
   const handleClick = () => {
-    localStorage.removeItem("token");
     setUser(null);
+    localStorage.removeItem("token");
+
     router.push("/dashboard");
   };
   return (

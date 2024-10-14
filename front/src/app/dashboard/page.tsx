@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   const getAllProducts = async () => {
     try {
-      const res = await axios.post(`${apiURL}/get/products/search`, {
+      const res = await axios.post(`${apiURL}get/products/search`, {
         name: search,
       });
       if (res.status === 200) {

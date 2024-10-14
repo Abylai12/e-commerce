@@ -43,11 +43,14 @@ export const createSaveCart = async (req: Request, res: Response) => {
 export const getSaveCart = async (req: Request, res: Response) => {
   const { id } = req.user;
   try {
-    const findSave = await SaveProduct.findOne({ user_id: id });
-    const ids = findSave?.products_id;
+    const findSave = await SaveProduct.findOne({ user_id: id }).populate(
+      "products_id.product_id"
+    );
+    console.log("savewithpopulate", findSave);
+    const products = findSave?.products_id;
     res.status(200).json({
       message: "success",
-      ids,
+      products,
     });
   } catch (error) {
     res.status(400).json({ error });
@@ -66,7 +69,9 @@ export const deleteSaveProduct = async (req: Request, res: Response) => {
     );
 
     if (!updatedSave) {
-      return res.status(404).json({ message: "No saved products found for this user." });
+      return res
+        .status(404)
+        .json({ message: "No saved products found for this user." });
     }
 
     res.status(200).json({

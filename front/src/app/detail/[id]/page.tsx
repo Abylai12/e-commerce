@@ -36,8 +36,12 @@ const ProductDetailPage = () => {
       <div className=" flex justify-center px-[200px]">
         <div className="flex pt-[52px] pb-20 gap-5">
           {detail?.map(
-            ({ images, isNew, price, discount, description, name }, idx) => (
+            (
+              { images, isNew, price, discount, description, name, _id },
+              idx
+            ) => (
               <DetailCart
+                _id={_id}
                 key={idx}
                 images={images}
                 isNew={isNew}
