@@ -1,7 +1,7 @@
 import { ProfileContext } from "@/context/profile-context";
 import { formattedPrice } from "@/lib/utils";
 import { apiURL } from "@/utils/apiHome";
-import { Product, SaveProduct } from "@/utils/interface";
+import { PackProduct, Product, SaveProduct } from "@/utils/interface";
 import axios from "axios";
 import { Heart, Trash2 } from "lucide-react";
 import Image from "next/image";
@@ -190,6 +190,62 @@ export const SaveListCart = ({
             <Trash2 />
           </button>
         </div>
+      </div>
+    </div>
+  );
+};
+
+export const PackCart = ({
+  _id,
+  name,
+  price,
+  images,
+  discount,
+  choice,
+}: PackProduct) => {
+  const { setProductId } = useContext(ProfileContext);
+  const [count, setCount] = useState<number>(1);
+  const handleSub = () => {
+    if (count > 0) {
+      setCount(count - 1);
+    } else {
+      setCount(0);
+    }
+  };
+
+  return (
+    <div className="w-[574px] h-[132px] bg-white rounded-2xl p-4 flex items-center gap-6 relative">
+      <img
+        src={images[0]}
+        alt="img"
+        className="w-[100px] h-[100px] rounded-2xl"
+      />
+      <div className="">
+        <h1 className="font-normal text-base mb-2">{name}</h1>
+        <p>сонголт {choice} </p>
+        <div className="mt-4">
+          <Button
+            className="rounded-full bg-transparent border border-black text-black dark:text-white dark:border-white w-8 h-8"
+            onClick={handleSub}
+          >
+            -
+          </Button>
+          <label className="4xl mx-4">{count}</label>
+          <Button
+            className="rounded-full bg-transparent border border-black text-black dark:text-white dark:border-white w-8 h-8"
+            onClick={() => setCount(count + 1)}
+          >
+            +
+          </Button>
+        </div>
+        <PriceWithDiscount price={price} discount={discount} />
+
+        <button
+          className="absolute top-4 right-4"
+          onClick={() => console.log(_id)}
+        >
+          <Trash2 />
+        </button>
       </div>
     </div>
   );

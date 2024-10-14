@@ -3,7 +3,7 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { IProduct } from "@/utils/interface";
 import { PriceWithDiscount } from "../cards/productCard";
-import { Heart } from "lucide-react";
+import { Beaker, Heart } from "lucide-react";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { RateComment } from "./rating";
@@ -35,7 +35,7 @@ const DetailCart = ({
   discount,
 }: IProduct) => {
   const { user } = useContext(ProfileContext);
-  const [count, setCount] = useState<number>(1);
+  const [quantity, setQuantity] = useState<number>(1);
   const [open, setOpen] = useState<boolean>(true);
   const [comments, setComments] = useState<IComments[] | null>(null);
   const [rating, setRating] = useState(0);
@@ -43,6 +43,33 @@ const DetailCart = ({
   const [size, setSize] = useState<string | null>(null);
   const [value, setValue] = useState<ratingData | null>(null);
   const { id } = useParams();
+
+  const createProductCart = async (product_id: string) => {
+    if (!size) {
+      return toast.warning("size aa songono uu");
+    }
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.post(
+        `${apiURL}create/product/cart`,
+        {
+          product_id,
+          size,
+          quantity,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        toast.success("amjilttai packed");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const getAllComments = async () => {
     try {
@@ -59,28 +86,7 @@ const DetailCart = ({
       console.error(error);
     }
   };
-  const createProductCart = async (_id: string) => {
-    if (!size) {
-      return toast.warning("size aa songono uu");
-    }
-    try {
-      const res = await axios.post(`${apiURL}create/product/`, {
-        _id,
-        size,
-        count,
-      });
-      if (res.status === 200) {
-        const { comments, ratingAVG, length } = res.data;
-        setComments(comments);
-        setValue({
-          ratingAVG: ratingAVG,
-          length: length,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
   const createComment = async () => {
     if (!comment) {
       return toast.warning("Сэтгэгдэл талбар хоосон байна");
@@ -113,10 +119,10 @@ const DetailCart = ({
   };
 
   const handleSub = () => {
-    if (count > 0) {
-      setCount(count - 1);
+    if (quantity > 0) {
+      setQuantity(quantity - 1);
     } else {
-      setCount(0);
+      setQuantity(0);
     }
   };
   const handleOpen = () => {
@@ -198,10 +204,10 @@ const DetailCart = ({
               >
                 -
               </Button>
-              <label className="4xl mx-4">{count}</label>
+              <label className="4xl mx-4">{quantity}</label>
               <Button
                 className="rounded-full bg-transparent border border-black text-black dark:text-white dark:border-white w-8 h-8"
-                onClick={() => setCount(count + 1)}
+                onClick={() => setQuantity(quantity + 1)}
               >
                 +
               </Button>

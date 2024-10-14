@@ -7,7 +7,6 @@ export const createSaveCart = async (req: Request, res: Response) => {
 
   try {
     const findSave = await SaveProduct.findOne({ user_id: id });
-    console.log(findSave);
     if (!findSave) {
       const data = await SaveProduct.create({
         user_id: id,
@@ -46,7 +45,6 @@ export const getSaveCart = async (req: Request, res: Response) => {
     const findSave = await SaveProduct.findOne({ user_id: id }).populate(
       "products_id.product_id"
     );
-    console.log("savewithpopulate", findSave);
     const products = findSave?.products_id;
     res.status(200).json({
       message: "success",

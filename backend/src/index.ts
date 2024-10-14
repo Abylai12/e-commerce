@@ -5,6 +5,7 @@ import catRoute from "./routes/categoryRoute";
 import productRoute from "./routes/productRoute";
 import commentRoute from "./routes/commentRoute";
 import saveProductRoute from "./routes/saveCartRoute";
+import packProductRoute from "./routes/packCartRoute";
 import { connectDB } from "./config/db";
 import cors from "cors";
 
@@ -29,6 +30,7 @@ app.use("/api/v1", catRoute);
 app.use("/api/v1", productRoute);
 app.use("/api/v1", commentRoute);
 app.use("/api/v1", saveProductRoute);
+app.use("/api/v1", packProductRoute);
 connectDB(MONGO_URI);
 
 app.listen(PORT, () => {

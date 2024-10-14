@@ -11,6 +11,14 @@ export type SaveProduct = {
   images: [string];
   discount: number;
 };
+export type PackProduct = {
+  choice: string;
+  _id: string;
+  name: string;
+  price: number;
+  images: [string];
+  discount: number;
+};
 export type Product = {
   name: string;
   description?: string;

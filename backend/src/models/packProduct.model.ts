@@ -11,7 +11,7 @@ interface IPackProduct {
   ];
 }
 
-const saveProductSchema = new Schema<IPackProduct>(
+const packProductSchema = new Schema<IPackProduct>(
   {
     user_id: {
       type: Schema.Types.ObjectId,
@@ -40,5 +40,5 @@ const saveProductSchema = new Schema<IPackProduct>(
     timestamps: true,
   }
 );
-const SaveProduct = model<IPackProduct>("PackProduct", saveProductSchema);
-export default SaveProduct;
+const PackProduct = model<IPackProduct>("PackProduct", packProductSchema);
+export default PackProduct;
