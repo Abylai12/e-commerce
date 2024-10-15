@@ -26,6 +26,8 @@ const Header = () => {
     setSaveList,
     setPackList,
     packList,
+    setTotalNumber,
+    refresh,
   } = useContext(ProfileContext);
   const router = useRouter();
 
@@ -60,7 +62,9 @@ const Header = () => {
         },
       });
       if (res.status === 200) {
-        const { products } = res.data;
+        const { products, totalAmount } = res.data;
+
+        setTotalNumber(totalAmount);
         setPackList(products);
         console.log("first", products);
       }
@@ -74,7 +78,7 @@ const Header = () => {
 
   useEffect(() => {
     getPackList();
-  }, [productId]);
+  }, [productId, refresh]);
   return (
     <section className="flex bg-black px-6 py-4 justify-between">
       <div className="flex items-center gap-8">

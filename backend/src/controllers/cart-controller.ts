@@ -4,7 +4,7 @@ import PackProduct from "../models/packProduct.model";
 export const createPackCart = async (req: Request, res: Response) => {
   const { id } = req.user;
   const { product_id, quantity, size } = req.body;
-  console.log("size", size);
+
   try {
     const findSave = await PackProduct.findOne({ user_id: id });
     if (!findSave) {
@@ -50,9 +50,48 @@ export const getPackCart = async (req: Request, res: Response) => {
     );
 
     const products = findSave?.products;
+    const totalAmount = products?.reduce((total: number, item: any) => {
+      const price = item.product_id.price;
+      const discount = item.product_id.discount;
+      const quantity = item.quantity;
+      return total + price * (1 - discount / 100) * quantity;
+    }, 0);
+
     res.status(200).json({
       message: "success",
       products,
+      totalAmount,
+    });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
+
+export const updateCartProduct = async (req: Request, res: Response) => {
+  const { id } = req.user;
+  const { cart_id, sizeUpdate, count } = req.body;
+  console.log(cart_id, sizeUpdate, count);
+  try {
+    const findSave = await PackProduct.findOne({ user_id: id });
+    if (!findSave) {
+      return res.status(400).json({ message: "hereglegch oldsongui" });
+    }
+
+    const products = findSave?.products;
+    const findIndex = products?.findIndex(
+      (item) => item._id?.toString() === cart_id
+    );
+    if (findIndex === -1) {
+      return res.status(404).json({ message: "baraa oldsongui" });
+    }
+    console.log("findIndex", findIndex);
+    products[findIndex].size = sizeUpdate;
+    products[findIndex].quantity = count;
+
+    const updatedData = await findSave.save();
+    res.status(200).json({
+      message: "success",
+      updatedData,
     });
   } catch (error) {
     res.status(400).json({ error });

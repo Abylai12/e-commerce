@@ -16,10 +16,12 @@ interface ProfileContextType {
   verifyUserOtp: (otp: string) => Promise<void>;
   getCurrentUser: () => void;
   setSearch: Dispatch<SetStateAction<string | null>>;
+  setRefresh: Dispatch<SetStateAction<boolean>>;
   setUser: Dispatch<SetStateAction<ILoggedUser | null>>;
   setProductId: Dispatch<SetStateAction<string | null>>;
   setSaveList: Dispatch<SetStateAction<ISave[] | null>>;
   setPackList: Dispatch<SetStateAction<IPack[] | null>>;
+  setTotalNumber: Dispatch<SetStateAction<number | null>>;
   verifyUserPassword: (
     resetToken: string | null,
     formValues: IUser
@@ -31,6 +33,8 @@ interface ProfileContextType {
   saveList: ISave[] | null;
   packList: IPack[] | null;
   userForm: IUser;
+  totalNumber: number | null;
+  refresh: boolean;
 }
 export const ProfileContext = createContext<ProfileContextType>({
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
@@ -39,10 +43,12 @@ export const ProfileContext = createContext<ProfileContextType>({
   verifyUserOtp: async (otp: string) => {},
   getCurrentUser: () => {},
   setSearch: () => {},
+  setRefresh: () => {},
   setUser: () => {},
   setSaveList: () => {},
   setPackList: () => {},
   setProductId: () => {},
+  setTotalNumber: () => {},
   verifyUserPassword: async (resetToken: string | null, formValues: IUser) => {
     if (!resetToken) {
       return toast.warning("password don't match");
@@ -54,6 +60,7 @@ export const ProfileContext = createContext<ProfileContextType>({
   search: null,
   saveList: null,
   packList: null,
+  totalNumber: null,
   userForm: {
     firstName: "",
     lastName: "",
@@ -61,6 +68,7 @@ export const ProfileContext = createContext<ProfileContextType>({
     password: "",
     repassword: "",
   },
+  refresh: false,
 });
 
 export const ProfileProvider = ({
@@ -72,6 +80,13 @@ export const ProfileProvider = ({
   const [user, setUser] = useState<ILoggedUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
+
+  const [search, setSearch] = useState<string | null>(null);
+  const [productId, setProductId] = useState<string | null>(null);
+  const [saveList, setSaveList] = useState<ISave[] | null>(null); //hadgalsan baraag setleh
+  const [packList, setPackList] = useState<IPack[] | null>(null); //hadgalsan baraag setleh
+  const [totalNumber, setTotalNumber] = useState<number | null>(null); //hadgalsan baraag setleh
   const [userForm, setUserForm] = useState<IUser>({
     firstName: "",
     lastName: "",
@@ -79,12 +94,6 @@ export const ProfileProvider = ({
     password: "",
     repassword: "",
   });
-
-  const [search, setSearch] = useState<string | null>(null);
-  const [productId, setProductId] = useState<string | null>(null);
-  const [saveList, setSaveList] = useState<ISave[] | null>(null); //hadgalsan baraag setleh
-  const [packList, setPackList] = useState<IPack[] | null>(null); //hadgalsan baraag setleh
-
   const handleLogForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserForm({
@@ -217,6 +226,10 @@ export const ProfileProvider = ({
         setProductId,
         setSaveList,
         setPackList,
+        setTotalNumber,
+        setRefresh,
+        refresh,
+        totalNumber,
         saveList,
         packList,
         productId,

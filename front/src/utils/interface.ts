@@ -13,7 +13,7 @@ export interface IPack {
   product_id: SaveProduct;
   quantity: number;
   size: string;
-  _id?: string;
+  _id: string;
 }
 export type SaveProduct = {
   size?: string;
