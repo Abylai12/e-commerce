@@ -4,21 +4,32 @@ export interface IGet {
   handleLogIn: () => void;
 }
 
+export interface ISave {
+  product_id: SaveProduct;
+  _id: string;
+}
+
+export interface IPack {
+  product_id: SaveProduct;
+  quantity: number;
+  size: string;
+  _id?: string;
+}
 export type SaveProduct = {
+  size?: string;
   _id: string;
   name: string;
   price: number;
   images: [string];
   discount: number;
 };
-export type PackProduct = {
-  choice: string;
-  _id: string;
-  name: string;
-  price: number;
-  images: [string];
-  discount: number;
-};
+// export type PackProduct = {
+//   _id: string;
+//   name: string;
+//   price: number;
+//   images: [string];
+//   discount: number;
+// };
 export type Product = {
   name: string;
   description?: string;

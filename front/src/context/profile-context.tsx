@@ -7,12 +7,8 @@ import { Id, toast } from "react-toastify";
 import { apiURL } from "@/utils/apiHome";
 import { useState } from "react";
 import { headers } from "next/headers";
-import { ILoggedUser, IUser, Product, SaveProduct } from "@/utils/interface";
+import { ILoggedUser, IPack, ISave, IUser } from "@/utils/interface";
 
-interface ISave {
-  product_id: SaveProduct;
-  _id: string;
-}
 interface ProfileContextType {
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   logInUser: () => void;
@@ -22,7 +18,8 @@ interface ProfileContextType {
   setSearch: Dispatch<SetStateAction<string | null>>;
   setUser: Dispatch<SetStateAction<ILoggedUser | null>>;
   setProductId: Dispatch<SetStateAction<string | null>>;
-  setList: Dispatch<SetStateAction<ISave[] | null>>;
+  setSaveList: Dispatch<SetStateAction<ISave[] | null>>;
+  setPackList: Dispatch<SetStateAction<IPack[] | null>>;
   verifyUserPassword: (
     resetToken: string | null,
     formValues: IUser
@@ -31,7 +28,8 @@ interface ProfileContextType {
   isLoading: boolean;
   user: ILoggedUser | null;
   search: string | null;
-  list: ISave[] | null;
+  saveList: ISave[] | null;
+  packList: IPack[] | null;
   userForm: IUser;
 }
 export const ProfileContext = createContext<ProfileContextType>({
@@ -42,7 +40,8 @@ export const ProfileContext = createContext<ProfileContextType>({
   getCurrentUser: () => {},
   setSearch: () => {},
   setUser: () => {},
-  setList: () => {},
+  setSaveList: () => {},
+  setPackList: () => {},
   setProductId: () => {},
   verifyUserPassword: async (resetToken: string | null, formValues: IUser) => {
     if (!resetToken) {
@@ -53,7 +52,8 @@ export const ProfileContext = createContext<ProfileContextType>({
   isLoading: false,
   user: null,
   search: null,
-  list: null,
+  saveList: null,
+  packList: null,
   userForm: {
     firstName: "",
     lastName: "",
@@ -82,7 +82,8 @@ export const ProfileProvider = ({
 
   const [search, setSearch] = useState<string | null>(null);
   const [productId, setProductId] = useState<string | null>(null);
-  const [list, setList] = useState<ISave[] | null>(null); //hadgalsan baraag setleh
+  const [saveList, setSaveList] = useState<ISave[] | null>(null); //hadgalsan baraag setleh
+  const [packList, setPackList] = useState<IPack[] | null>(null); //hadgalsan baraag setleh
 
   const handleLogForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -214,8 +215,10 @@ export const ProfileProvider = ({
         setSearch,
         setUser,
         setProductId,
-        setList,
-        list,
+        setSaveList,
+        setPackList,
+        saveList,
+        packList,
         productId,
         isLoading,
         user,

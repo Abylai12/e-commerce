@@ -34,7 +34,7 @@ const DetailCart = ({
   price,
   discount,
 }: IProduct) => {
-  const { user } = useContext(ProfileContext);
+  const { user, setProductId } = useContext(ProfileContext);
   const [quantity, setQuantity] = useState<number>(1);
   const [open, setOpen] = useState<boolean>(true);
   const [comments, setComments] = useState<IComments[] | null>(null);
@@ -64,7 +64,12 @@ const DetailCart = ({
         }
       );
       if (res.status === 200) {
+        setProductId(product_id);
         toast.success("amjilttai packed");
+      }
+      if (res.status === 201) {
+        toast.success("Аль хэдийн хадгалагдсан бараа байна");
+        setProductId(size);
       }
     } catch (error) {
       console.error(error);

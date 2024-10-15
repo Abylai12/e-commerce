@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useEffect } from "react";
 
 const SaveList = () => {
-  const { list, setList, user } = useContext(ProfileContext);
+  const { saveList, setSaveList, user } = useContext(ProfileContext);
   const router = useRouter();
   useEffect(() => {
     if (!user) {
@@ -21,9 +21,11 @@ const SaveList = () => {
 
   return (
     <div className="bg-gray-200 flex gap-5 flex-col items-center py-[56px] justify-center">
-      <h1 className="font-bold text-xl">Хадгалсан бараа ({list?.length})</h1>
+      <h1 className="font-bold text-xl">
+        Хадгалсан бараа ({saveList?.length})
+      </h1>
 
-      {list?.map(({ product_id }, idx) => (
+      {saveList?.map(({ product_id }, idx) => (
         <SaveListCart
           _id={product_id._id}
           images={product_id.images}

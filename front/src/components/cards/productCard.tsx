@@ -1,7 +1,7 @@
 import { ProfileContext } from "@/context/profile-context";
 import { formattedPrice } from "@/lib/utils";
 import { apiURL } from "@/utils/apiHome";
-import { PackProduct, Product, SaveProduct } from "@/utils/interface";
+import { IPack, Product, SaveProduct } from "@/utils/interface";
 import axios from "axios";
 import { Heart, Trash2 } from "lucide-react";
 import Image from "next/image";
@@ -195,14 +195,7 @@ export const SaveListCart = ({
   );
 };
 
-export const PackCart = ({
-  _id,
-  name,
-  price,
-  images,
-  discount,
-  choice,
-}: PackProduct) => {
+export const PackCart = ({ _id, quantity, product_id, size }: IPack) => {
   const { setProductId } = useContext(ProfileContext);
   const [count, setCount] = useState<number>(1);
   const handleSub = () => {
@@ -216,13 +209,13 @@ export const PackCart = ({
   return (
     <div className="w-[574px] h-[132px] bg-white rounded-2xl p-4 flex items-center gap-6 relative">
       <img
-        src={images[0]}
+        src={product_id.images[0]}
         alt="img"
         className="w-[100px] h-[100px] rounded-2xl"
       />
       <div className="">
-        <h1 className="font-normal text-base mb-2">{name}</h1>
-        <p>сонголт {choice} </p>
+        <h1 className="font-normal text-base mb-2">{product_id.name}</h1>
+        <p>сонголт {size} </p>
         <div className="mt-4">
           <Button
             className="rounded-full bg-transparent border border-black text-black dark:text-white dark:border-white w-8 h-8"
@@ -238,7 +231,10 @@ export const PackCart = ({
             +
           </Button>
         </div>
-        <PriceWithDiscount price={price} discount={discount} />
+        <PriceWithDiscount
+          price={product_id.price}
+          discount={product_id.discount}
+        />
 
         <button
           className="absolute top-4 right-4"
