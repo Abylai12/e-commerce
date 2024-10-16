@@ -82,11 +82,45 @@ export const updateCartProduct = async (req: Request, res: Response) => {
       (item) => item._id?.toString() === cart_id
     );
     if (findIndex === -1) {
-      return res.status(404).json({ message: "baraa oldsongui" });
+      return res.status(400).json({ message: "baraa oldsongui" });
     }
     console.log("findIndex", findIndex);
-    products[findIndex].size = sizeUpdate;
+
+    if (products[findIndex].size === sizeUpdate) {
+      products.splice(findIndex, 1);
+      await findSave.save();
+      return res.status(400).json({ message: "baraanii hemjee davhatsaj bn" });
+    }
+    products[findIndex].size === sizeUpdate;
     products[findIndex].quantity = count;
+
+    const updatedData = await findSave.save();
+    res.status(200).json({
+      message: "success",
+      updatedData,
+    });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
+
+export const deleteCartProduct = async (req: Request, res: Response) => {
+  const { id } = req.user;
+  const { cart_id } = req.params;
+  console.log(cart_id);
+  try {
+    const findSave = await PackProduct.findOne({ user_id: id });
+    if (!findSave) {
+      return res.status(400).json({ message: "hereglegch oldsongui" });
+    }
+    const products = findSave?.products;
+    const findIndex = products?.findIndex(
+      (item) => item._id?.toString() === cart_id
+    );
+    if (findIndex === -1) {
+      return res.status(400).json({ message: "baraa oldsongui" });
+    }
+    products.splice(findIndex, 1);
 
     const updatedData = await findSave.save();
     res.status(200).json({

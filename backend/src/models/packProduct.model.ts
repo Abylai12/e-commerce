@@ -6,7 +6,7 @@ interface IPackProduct {
     {
       _id?: Schema.Types.ObjectId;
       product_id: Schema.Types.ObjectId;
-      quantity: Number;
+      quantity: number;
       size: String;
     }
   ];

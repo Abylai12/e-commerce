@@ -209,7 +209,11 @@ export const PackCart = ({ _id, quantity, product_id, size }: IPack) => {
   const [sizeUpdate, setSizeUpdate] = useState<string>(size);
   console.log("count", count);
 
-  const updateCartProduct = async (cart_id: string, count: number) => {
+  const updateCartProduct = async (
+    cart_id: string,
+    count: number,
+    sizeUpdate: string
+  ) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.put(
@@ -229,30 +233,62 @@ export const PackCart = ({ _id, quantity, product_id, size }: IPack) => {
         console.log("success");
         setRefresh((prevRefresh) => !prevRefresh);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        const message = error.response.data.message || "Error deleting product";
+        setRefresh((prevRefresh) => !prevRefresh);
+        toast.warning(message);
+      } else {
+        console.error(error);
+      }
+    }
+  };
+  const deleteCartProduct = async (cart_id: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.delete(
+        `${apiURL}delete/cart/product/${cart_id}`,
+        {
+          headers: {
+            Authorization: `Bearer, ${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        const { message } = res.data;
+        toast.success(message);
+        setRefresh((prevRefresh) => !prevRefresh);
+      }
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        const message = error.response.data.message || "Error deleting product";
+        setRefresh((prevRefresh) => !prevRefresh);
+        toast.warning(message);
+      } else {
+        console.error(error);
+      }
     }
   };
   const handleSub = () => {
     setCount((prevCount) => {
       const newCount = prevCount > 1 ? prevCount - 1 : 1;
-      updateCartProduct(_id, newCount);
+      updateCartProduct(_id, newCount, sizeUpdate);
       return newCount;
     });
   };
   const handleAdd = () => {
     setCount((prevCount) => {
       const newCount = prevCount + 1;
-      updateCartProduct(_id, newCount);
+      updateCartProduct(_id, newCount, sizeUpdate);
       return newCount;
     });
   };
   const handleSelectChange = (value: string) => {
     setSizeUpdate(value);
-    updateCartProduct(_id, count);
+    updateCartProduct(_id, count, value);
   };
   const handleDelete = (id: string) => {
-    console.log(_id);
+    deleteCartProduct(id);
   };
 
   return (
