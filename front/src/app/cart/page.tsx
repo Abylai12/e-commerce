@@ -8,16 +8,10 @@ import React, { useContext, useEffect } from "react";
 import { formattedPrice } from "@/lib/utils";
 
 const CartPage = () => {
-  const { packList, setPackList, user, totalNumber } =
+  const { packList, setPackList, user, totalNumber, refresh } =
     useContext(ProfileContext);
   const router = useRouter();
-  useEffect(() => {
-    if (!user) {
-      router.push("/404");
-    } else {
-      router.push("/cart");
-    }
-  }, [user]);
+  
   return (
     <div className="bg-slate-200 flex items-center flex-col ">
       <div className="mb-10">

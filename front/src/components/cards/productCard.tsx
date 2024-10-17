@@ -6,7 +6,7 @@ import axios from "axios";
 import { Heart, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -207,7 +207,6 @@ export const PackCart = ({ _id, quantity, product_id, size }: IPack) => {
   const { setRefresh } = useContext(ProfileContext);
   const [count, setCount] = useState<number>(quantity);
   const [sizeUpdate, setSizeUpdate] = useState<string>(size);
-  console.log("count", count);
 
   const updateCartProduct = async (
     cart_id: string,
@@ -230,17 +229,12 @@ export const PackCart = ({ _id, quantity, product_id, size }: IPack) => {
         }
       );
       if (res.status === 200) {
+        setRefresh((prevRefresh) => !prevRefresh);
         console.log("success");
-        setRefresh((prevRefresh) => !prevRefresh);
       }
-    } catch (error: any) {
-      if (error.response && error.response.status === 400) {
-        const message = error.response.data.message || "Error deleting product";
-        setRefresh((prevRefresh) => !prevRefresh);
-        toast.warning(message);
-      } else {
-        console.error(error);
-      }
+    } catch (error) {
+      setRefresh((prevRefresh) => !prevRefresh);
+      console.error(error);
     }
   };
   const deleteCartProduct = async (cart_id: string) => {
@@ -255,9 +249,10 @@ export const PackCart = ({ _id, quantity, product_id, size }: IPack) => {
         }
       );
       if (res.status === 200) {
-        const { message } = res.data;
-        toast.success(message);
         setRefresh((prevRefresh) => !prevRefresh);
+        const { message } = res.data;
+
+        toast.success(message);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
@@ -290,7 +285,10 @@ export const PackCart = ({ _id, quantity, product_id, size }: IPack) => {
   const handleDelete = (id: string) => {
     deleteCartProduct(id);
   };
-
+  useEffect(() => {
+    setCount(quantity); // Update count if quantity prop changes
+    setSizeUpdate(size); // Update sizeUpdate if size prop changes
+  }, [quantity, size]);
   return (
     <div className="w-[574px] bg-white rounded-2xl border-slate-200 border p-4 flex items-center gap-6 relative">
       <img
@@ -303,12 +301,16 @@ export const PackCart = ({ _id, quantity, product_id, size }: IPack) => {
         <div className="flex items-center gap-4 ">
           <Select onValueChange={handleSelectChange}>
             <SelectTrigger className="w-16">
-              <SelectValue placeholder={sizeUpdate} />
+              <SelectValue placeholder={size} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 {["S", "M", "L", "XL", "XXL"].map((sizeOption, idx) => (
-                  <SelectItem value={sizeOption} key={idx}>
+                  <SelectItem
+                    value={sizeOption}
+                    key={idx}
+                    disabled={sizeOption === size}
+                  >
                     {sizeOption}
                   </SelectItem>
                 ))}

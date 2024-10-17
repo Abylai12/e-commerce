@@ -34,7 +34,7 @@ const DetailCart = ({
   price,
   discount,
 }: IProduct) => {
-  const { user, setProductId } = useContext(ProfileContext);
+  const { user, setProductId, setRefresh } = useContext(ProfileContext);
   const [quantity, setQuantity] = useState<number>(1);
   const [open, setOpen] = useState<boolean>(true);
   const [comments, setComments] = useState<IComments[] | null>(null);
@@ -64,7 +64,7 @@ const DetailCart = ({
         }
       );
       if (res.status === 200) {
-        setProductId(product_id);
+        setRefresh((prevRefresh) => !prevRefresh);
         toast.success("amjilttai packed");
       }
       if (res.status === 201) {

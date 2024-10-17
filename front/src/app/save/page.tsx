@@ -9,15 +9,9 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useEffect } from "react";
 
 const SaveList = () => {
-  const { saveList, setSaveList, user } = useContext(ProfileContext);
+  const { saveList, setSaveList, user, refresh } = useContext(ProfileContext);
   const router = useRouter();
-  useEffect(() => {
-    if (!user) {
-      router.push("/404");
-    } else {
-      router.push("/save");
-    }
-  }, [user]);
+  useEffect(() => {}, [refresh]);
 
   return (
     <div className="bg-gray-200 flex gap-5 flex-col items-center py-[56px] justify-center">

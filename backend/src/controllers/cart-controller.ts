@@ -21,8 +21,6 @@ export const createPackCart = async (req: Request, res: Response) => {
       (item) => item.product_id.toString() === product_id
     );
 
-    console.log("duplicat", findDuplicated);
-
     if (findDuplicated.length > 0) {
       const findSize = findDuplicated.some((item) => item.size === size);
       if (findSize) {
@@ -85,20 +83,40 @@ export const updateCartProduct = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "baraa oldsongui" });
     }
     console.log("findIndex", findIndex);
-
-    if (products[findIndex].size === sizeUpdate) {
-      products.splice(findIndex, 1);
-      await findSave.save();
-      return res.status(400).json({ message: "baraanii hemjee davhatsaj bn" });
-    }
-    products[findIndex].size === sizeUpdate;
-    products[findIndex].quantity = count;
-
-    const updatedData = await findSave.save();
-    res.status(200).json({
-      message: "success",
-      updatedData,
+    const pro_id = products[findIndex].product_id;
+    const checkProArr = products.filter((item) => {
+      return item.product_id.toString() === pro_id.toString();
     });
+    console.log("products", products);
+    console.log("prrArr", checkProArr);
+    if (checkProArr.length === 0) {
+      products[findIndex].size = sizeUpdate;
+      products[findIndex].quantity = count;
+      const updatedData = await findSave.save();
+      res.status(200).json({
+        message: "size davhatssan baraa baihgui",
+        updatedData,
+      });
+      return;
+    }
+    const idx = checkProArr.findIndex((item) => item.size === sizeUpdate);
+    if (idx === -1) {
+      products[findIndex].size = sizeUpdate;
+      products[findIndex].quantity = count;
+      const updatedData = await findSave.save();
+      res.status(200).json({
+        message: "size davhatssan baraa baihgui",
+        updatedData,
+      });
+      return;
+    }
+
+    console.log("idx", idx);
+
+    products[idx].quantity += count;
+    products.splice(findIndex, 1);
+    await findSave.save();
+    res.status(200).json({ message: " success" });
   } catch (error) {
     res.status(400).json({ error });
   }
