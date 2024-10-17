@@ -82,6 +82,15 @@ export const updateCartProduct = async (req: Request, res: Response) => {
     if (findIndex === -1) {
       return res.status(400).json({ message: "baraa oldsongui" });
     }
+    if (products[findIndex].quantity !== count) {
+      products[findIndex].quantity = count;
+      const updatedData = await findSave.save();
+      res.status(200).json({
+        message: "size davhatssan baraa baihgui",
+        updatedData,
+      });
+      return;
+    }
     console.log("findIndex", findIndex);
     const pro_id = products[findIndex].product_id;
     const checkProArr = products.filter((item) => {
