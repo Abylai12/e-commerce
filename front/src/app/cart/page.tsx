@@ -1,6 +1,8 @@
 "use client";
 
-import PackPageCart from "@/components/cards/PackCards/packCart";
+import AddressCard from "@/components/cards/PackCards/addressCard/addressCard";
+import PackPageCart from "@/components/cards/PackCards/changePackCard";
+import PayCard from "@/components/cards/payCards/paycard";
 
 const CartPage = () => {
   return (
@@ -18,6 +20,8 @@ const CartPage = () => {
           </div>
         </div>
         <PackPageCart />
+        <AddressCard />
+        <PayCard />
       </div>
     </div>
   );

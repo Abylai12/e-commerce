@@ -35,10 +35,11 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(400).json({ message: "Not found user" });
     }
-    const { email, profile_img, firstName, lastName } = user;
+    const { email, profile_img, firstName, lastName, address, phoneNumber } =
+      user;
     res.status(200).json({
       message: "success",
-      user: { email, profile_img, firstName, lastName },
+      user: { email, profile_img, firstName, lastName, address, phoneNumber },
     });
   } catch (error) {
     res.status(401).json({ error });

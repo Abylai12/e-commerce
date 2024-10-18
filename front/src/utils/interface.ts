@@ -23,13 +23,7 @@ export type SaveProduct = {
   images: [string];
   discount: number;
 };
-// export type PackProduct = {
-//   _id: string;
-//   name: string;
-//   price: number;
-//   images: [string];
-//   discount: number;
-// };
+
 export type Product = {
   name: string;
   description?: string;
@@ -62,5 +56,8 @@ export interface ILoggedUser {
   lastName: string;
   email: string;
   profile_img: string;
+  address?: string;
+  phoneNumber?: string;
+  additionalInfo?: string;
 }
 // discount: number;

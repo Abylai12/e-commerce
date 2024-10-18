@@ -38,3 +38,15 @@ export const userSchema = z.object({
   address: z.string(),
   profile_img: z.string(),
 });
+
+export const deliveryUserSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string().email({ message: "Please enter a valid email." }).trim(),
+  phoneNumber: z
+    .string()
+    .min(10, { message: "Must be a valid mobile number" })
+    .max(14, { message: "Must be a valid mobile number" }),
+  address: z.string(),
+  additionalInfo: z.string().optional(),
+});
