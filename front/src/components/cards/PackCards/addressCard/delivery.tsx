@@ -18,8 +18,12 @@ import { useForm } from "react-hook-form";
 import { ProfileContext } from "@/context/profile-context";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/loader/loader";
+interface CardProps {
+  onSubmit: (values: z.infer<typeof deliveryUserSchema>) => void;
+  handleBack: () => void;
+}
 
-const DeliveryCard = () => {
+const DeliveryCard = ({ onSubmit, handleBack }: CardProps) => {
   const { user } = useContext(ProfileContext);
   const form = useForm<z.infer<typeof deliveryUserSchema>>({
     resolver: zodResolver(deliveryUserSchema),
@@ -43,9 +47,7 @@ const DeliveryCard = () => {
       });
     }
   }, [user, form]);
-  const onSubmit = (values: z.infer<typeof deliveryUserSchema>) => {
-    console.log(values);
-  };
+
   return (
     <div>
       <div className="w-[680px] bg-white p-5 rounded-2xl">
@@ -143,7 +145,9 @@ const DeliveryCard = () => {
                   </label>
 
                   <div className="flex justify-between">
-                    <Button variant={"myBtn"}>Буцах</Button>
+                    <Button variant={"myBtn"} onClick={handleBack}>
+                      Буцах
+                    </Button>
                     <Button variant={"myBtn"} type="submit">
                       Төлбөр төлөх
                     </Button>

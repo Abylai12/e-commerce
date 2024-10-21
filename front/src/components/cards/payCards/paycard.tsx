@@ -1,9 +1,16 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-const PayCard = () => {
+const PayCard = ({
+  setState,
+}: {
+  setState: Dispatch<SetStateAction<number>>;
+}) => {
   const [countDown, setCountDown] = useState(900); // 15 minutes in seconds
+  const handleClick = () => {
+    setState(2);
+  };
 
   useEffect(() => {
     if (countDown > 0) {
@@ -29,7 +36,7 @@ const PayCard = () => {
         <img src="/images/qpay.svg" alt="QPay logo" />
         <p>Төлөх боломжтой банкууд</p>
       </div>
-      <Button>Буцах</Button>
+      <Button onClick={handleClick}>Буцах</Button>
     </div>
   );
 };

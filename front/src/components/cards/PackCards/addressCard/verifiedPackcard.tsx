@@ -6,7 +6,7 @@ import { formattedPrice } from "@/lib/utils";
 const VerifyPackCard = () => {
   const { packList, totalNumber } = useContext(ProfileContext);
   return (
-    <div className="bg-white rounded-2xl">
+    <div className="bg-white p-4 rounded-2xl">
       <h1>Сагс ({packList?.length})</h1>
       <div className=" flex flex-col gap-4 w-[333px]  p-4">
         {packList?.map(({ quantity, product_id, size }, idx) => (

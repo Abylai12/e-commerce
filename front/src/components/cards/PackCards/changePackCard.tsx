@@ -1,15 +1,22 @@
 import { ProfileContext } from "@/context/profile-context";
-import React, { useContext } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 
 import { formattedPrice } from "@/lib/utils";
 import { Button } from "../../ui/button";
 import { PackCart } from "./packCard";
 
-const PackPageCart = () => {
+const PackPageCart = ({
+  setState,
+}: {
+  setState: Dispatch<SetStateAction<number>>;
+}) => {
   const { packList, totalNumber } = useContext(ProfileContext);
+  const handleClick = () => {
+    setState(2);
+  };
   return (
     <div>
-      <div className=" p-8 w-[632px]  rounded-2xl bg-white">
+      <div className=" p-8 w-[682px]  rounded-2xl bg-white">
         <h1>Сагс ({packList?.length})</h1>
         <div className="flex flex-col gap-4">
           {packList?.map(({ product_id, quantity, size, _id }, idx) => (
@@ -27,7 +34,10 @@ const PackPageCart = () => {
           <p className="font-bold">{formattedPrice(totalNumber ?? 0)}</p>
         </div>
         <div className="flex justify-end">
-          <Button className="mt-2 bg-[#2563EB] rounded-3xl">
+          <Button
+            className="mt-2 bg-[#2563EB] rounded-3xl"
+            onClick={handleClick}
+          >
             Худалдан авах
           </Button>
         </div>
