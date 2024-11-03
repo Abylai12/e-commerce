@@ -24,6 +24,11 @@ type ratingData = {
   ratingAVG: number;
   length: number;
 };
+export interface ISaveProduct {
+  product_id: string;
+  quantity: number;
+  size: string;
+}
 
 const DetailCart = ({
   _id,
@@ -46,16 +51,43 @@ const DetailCart = ({
 
   const createProductCart = async (product_id: string) => {
     if (!size) {
-      return toast.warning("size aa songono uu");
+      return toast.warning("Барааны хэмжээг сонгоно уу");
+    }
+    if (!user) {
+      const existProducts: ISaveProduct[] = JSON.parse(
+        localStorage.getItem("[pendingProducts]") || "[]"
+      );
+      const saveProduct = {
+        product_id,
+        size,
+        quantity,
+      };
+      const productExists = existProducts.some(
+        (product: ISaveProduct) =>
+          product.product_id.toString() === product_id && product.size === size
+      );
+      if (!productExists) {
+        existProducts.push(saveProduct);
+        localStorage.setItem(
+          "[pendingProducts]",
+          JSON.stringify(existProducts)
+        );
+        setRefresh((prev) => !prev);
+      } else {
+        toast.warn("Product already exists in local storage:");
+      }
+      return;
     }
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
         `${apiURL}create/product/cart`,
         {
-          product_id,
-          size,
-          quantity,
+          saveProduct: {
+            product_id,
+            size,
+            quantity,
+          },
         },
         {
           headers: {

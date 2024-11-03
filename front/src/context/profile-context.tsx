@@ -111,6 +111,7 @@ export const ProfileProvider = ({
       if (res.status === 200) {
         const { token, user } = res.data;
         localStorage.setItem("token", token);
+        setRefresh((prevRefresh) => !prevRefresh);
         setToken(token);
         toast.success("User successfully signed in");
         router.push("/dashboard");

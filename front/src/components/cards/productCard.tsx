@@ -22,7 +22,7 @@ export const ProductCard = ({
   _id,
   category,
 }: Product) => {
-  const { setProductId } = useContext(ProfileContext);
+  const { setProductId, setRefresh } = useContext(ProfileContext);
   const createSaveProduct = async (product_id: string) => {
     const token = localStorage.getItem("token");
     try {
@@ -39,6 +39,7 @@ export const ProductCard = ({
       if (res.status === 200) {
         toast.success("Бараа амжилттай хадгалагдлаа");
         setProductId(product_id);
+        setRefresh((prev) => !prev);
       }
       if (res.status === 201) {
         toast.success("Хадгалсан бараа байна");
@@ -50,7 +51,6 @@ export const ProductCard = ({
   };
   const handleSave = (id: string) => {
     createSaveProduct(id);
-    console.log("id");
   };
   return (
     <div>
@@ -147,7 +147,7 @@ export const SaveListCart = ({
   images,
   discount,
 }: SaveProduct) => {
-  const { setProductId } = useContext(ProfileContext);
+  const { setRefresh } = useContext(ProfileContext);
   const deleteSaveProduct = async (product_id: string) => {
     const token = localStorage.getItem("token");
     try {
@@ -162,7 +162,7 @@ export const SaveListCart = ({
       );
       if (res.status === 200) {
         toast.success("Бараа амжилттай устгахдлаа");
-        setProductId(product_id);
+        setRefresh((prev) => !prev);
       }
     } catch (error) {
       toast.error("Нэвтэрнэ үү");

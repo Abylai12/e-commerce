@@ -3,9 +3,9 @@ import PackProduct from "../models/packProduct.model";
 
 export const createPackCart = async (req: Request, res: Response) => {
   const { id } = req.user;
-  const { product_id, quantity, size } = req.body;
-
+  const { saveProduct } = req.body;
   try {
+    const { product_id, quantity, size } = saveProduct;
     const findSave = await PackProduct.findOne({ user_id: id });
     if (!findSave) {
       const data = await PackProduct.create({

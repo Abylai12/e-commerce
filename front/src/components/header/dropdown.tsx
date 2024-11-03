@@ -36,13 +36,13 @@ import { ProfileContext } from "@/context/profile-context";
 
 // imgURl: string
 export const DropdownMenuDemo = ({ imgURl }: { imgURl: string }) => {
-  const { setUser } = useContext(ProfileContext);
+  const { setUser, setRefresh } = useContext(ProfileContext);
   const router = useRouter();
   const handleClick = () => {
-    setUser(null);
     localStorage.removeItem("token");
-
-    router.push("/dashboard");
+    setUser(null);
+    setRefresh((prevRefresh) => !prevRefresh);
+    router.replace("/dashboard");
   };
   return (
     <DropdownMenu>

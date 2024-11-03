@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Search } from "lucide-react";
 import { Heart } from "lucide-react";
@@ -12,6 +12,7 @@ import { DropdownMenuDemo } from "./dropdown";
 import Link from "next/link";
 import axios from "axios";
 import { apiURL } from "@/utils/apiHome";
+import { ISaveProduct } from "../detail/detailCart";
 
 // type ListSave = {
 //   product_id: string;
@@ -31,6 +32,10 @@ const Header = () => {
     refresh,
   } = useContext(ProfileContext);
   const router = useRouter();
+
+  const [localProducts, setLocalProducts] = useState<ISaveProduct[] | null>(
+    null
+  );
 
   const getSaveList = async () => {
     try {
@@ -66,19 +71,24 @@ const Header = () => {
         const { products, totalAmount } = res.data;
         setTotalNumber(totalAmount);
         setPackList(products);
-        console.log("packProducts", products);
       }
     } catch (error) {
       console.error(error);
     }
   };
-  useEffect(() => {
-    getSaveList();
-  }, [productId]);
+  const handleLocalProduct = () => {
+    const pendingProducts = JSON.parse(
+      localStorage.getItem("[pendingProducts]") || "[]"
+    );
+    setLocalProducts(pendingProducts);
+    console.log("object", localProducts);
+  };
 
   useEffect(() => {
+    getSaveList();
     getPackList();
   }, [refresh]);
+
   return (
     <section className="flex bg-black px-6 py-4 justify-between">
       <div className="flex items-center gap-8">
@@ -105,8 +115,8 @@ const Header = () => {
         <Link href={user ? "/save" : "/"}>
           <div className="relative">
             <Heart className="text-white" />
-            {saveList?.length === 0 ? (
-              <></>
+            {!user ? (
+              <div></div>
             ) : (
               <div className="absolute -top-1/4 -right-1/4 bg-blue-400 rounded-full text-[10px] w-4 h-4 flex items-center justify-center text-white">
                 {saveList?.length}
@@ -117,8 +127,14 @@ const Header = () => {
         <Link href={user ? "/cart" : "/"}>
           <div className="relative">
             <ShoppingCart className="text-white" />
-            {packList?.length === 0 ? (
-              <></>
+            {!user ? (
+              <div
+                className={`absolute -top-1/4 -right-1/4 ${
+                  localProducts?.length === 0 ? "bg-blue-400" : ""
+                } rounded-full text-[10px] w-4 h-4 flex items-center justify-center text-white`}
+              >
+                {localProducts?.length}
+              </div>
             ) : (
               <div className="absolute -top-1/4 -right-1/4 bg-blue-400 rounded-full text-[10px] w-4 h-4 flex items-center justify-center text-white">
                 {packList?.length}
