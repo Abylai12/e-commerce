@@ -30,12 +30,9 @@ const Header = () => {
     setRefresh,
     setTotalNumber,
     refresh,
+    localProducts,
   } = useContext(ProfileContext);
   const router = useRouter();
-
-  const [localProducts, setLocalProducts] = useState<ISaveProduct[] | null>(
-    null
-  );
 
   const getSaveList = async () => {
     try {
@@ -75,13 +72,6 @@ const Header = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-  const handleLocalProduct = () => {
-    const pendingProducts = JSON.parse(
-      localStorage.getItem("[pendingProducts]") || "[]"
-    );
-    setLocalProducts(pendingProducts);
-    console.log("object", localProducts);
   };
 
   useEffect(() => {
@@ -130,7 +120,7 @@ const Header = () => {
             {!user ? (
               <div
                 className={`absolute -top-1/4 -right-1/4 ${
-                  localProducts?.length === 0 ? "bg-blue-400" : ""
+                  localProducts?.length ? "bg-blue-400" : ""
                 } rounded-full text-[10px] w-4 h-4 flex items-center justify-center text-white`}
               >
                 {localProducts?.length}

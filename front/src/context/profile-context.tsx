@@ -8,6 +8,7 @@ import { apiURL } from "@/utils/apiHome";
 import { useState } from "react";
 import { headers } from "next/headers";
 import { ILoggedUser, IPack, ISave, IUser } from "@/utils/interface";
+import { ISaveProduct } from "@/components/detail/detailCart";
 
 interface ProfileContextType {
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -22,6 +23,7 @@ interface ProfileContextType {
   setSaveList: Dispatch<SetStateAction<ISave[] | null>>;
   setPackList: Dispatch<SetStateAction<IPack[] | null>>;
   setTotalNumber: Dispatch<SetStateAction<number | null>>;
+  setLocalProducts: Dispatch<SetStateAction<ISaveProduct[] | null>>;
   verifyUserPassword: (
     resetToken: string | null,
     formValues: IUser
@@ -32,6 +34,7 @@ interface ProfileContextType {
   search: string | null;
   saveList: ISave[] | null;
   packList: IPack[] | null;
+  localProducts: ISaveProduct[] | null;
   userForm: IUser;
   totalNumber: number | null;
   refresh: boolean;
@@ -49,6 +52,7 @@ export const ProfileContext = createContext<ProfileContextType>({
   setPackList: () => {},
   setProductId: () => {},
   setTotalNumber: () => {},
+  setLocalProducts: () => {},
   verifyUserPassword: async (resetToken: string | null, formValues: IUser) => {
     if (!resetToken) {
       return toast.warning("password don't match");
@@ -69,6 +73,7 @@ export const ProfileContext = createContext<ProfileContextType>({
     repassword: "",
   },
   refresh: false,
+  localProducts: null,
 });
 
 export const ProfileProvider = ({
@@ -87,6 +92,9 @@ export const ProfileProvider = ({
   const [saveList, setSaveList] = useState<ISave[] | null>(null); //hadgalsan baraag setleh
   const [packList, setPackList] = useState<IPack[] | null>(null); //hadgalsan baraag setleh
   const [totalNumber, setTotalNumber] = useState<number | null>(null); //hadgalsan baraag setleh
+  const [localProducts, setLocalProducts] = useState<ISaveProduct[] | null>(
+    null
+  );
   const [userForm, setUserForm] = useState<IUser>({
     firstName: "",
     lastName: "",
@@ -229,6 +237,7 @@ export const ProfileProvider = ({
         setPackList,
         setTotalNumber,
         setRefresh,
+        setLocalProducts,
         refresh,
         totalNumber,
         saveList,
@@ -238,6 +247,7 @@ export const ProfileProvider = ({
         user,
         search,
         userForm,
+        localProducts,
       }}
     >
       {children}

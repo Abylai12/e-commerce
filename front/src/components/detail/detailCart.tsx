@@ -39,7 +39,8 @@ const DetailCart = ({
   price,
   discount,
 }: IProduct) => {
-  const { user, setProductId, setRefresh } = useContext(ProfileContext);
+  const { user, setProductId, setRefresh, setLocalProducts } =
+    useContext(ProfileContext);
   const [quantity, setQuantity] = useState<number>(1);
   const [open, setOpen] = useState<boolean>(true);
   const [comments, setComments] = useState<IComments[] | null>(null);
@@ -55,7 +56,7 @@ const DetailCart = ({
     }
     if (!user) {
       const existProducts: ISaveProduct[] = JSON.parse(
-        localStorage.getItem("[pendingProducts]") || "[]"
+        localStorage.getItem("pendingProducts") || "[]"
       );
       const saveProduct = {
         product_id,
@@ -68,11 +69,8 @@ const DetailCart = ({
       );
       if (!productExists) {
         existProducts.push(saveProduct);
-        localStorage.setItem(
-          "[pendingProducts]",
-          JSON.stringify(existProducts)
-        );
-        setRefresh((prev) => !prev);
+        localStorage.setItem("pendingProducts", JSON.stringify(existProducts));
+        setLocalProducts(existProducts);
       } else {
         toast.warn("Product already exists in local storage:");
       }
