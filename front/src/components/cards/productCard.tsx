@@ -57,7 +57,7 @@ export const ProductCard = ({
     <div>
       <div className={`relative`}>
         <Link href={"/detail/" + _id + "?cat_id=" + category}>
-          <Image
+          <img
             src={images[0]}
             alt="image1"
             className="rounded-lg h-full w-full"
@@ -175,7 +175,7 @@ export const SaveListCart = ({
   };
   return (
     <div className="w-[622px] h-[132px] bg-white rounded-2xl p-4 flex items-center gap-6 relative">
-      <Image
+      <img
         src={images[0]}
         alt="img"
         className="w-[100px] h-[100px] rounded-2xl"
