@@ -3,7 +3,7 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { IProduct } from "@/utils/interface";
 import { PriceWithDiscount } from "../cards/productCard";
-import { Beaker, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
 import { RateComment } from "./rating";
@@ -12,8 +12,6 @@ import { apiURL } from "@/utils/apiHome";
 import { useParams } from "next/navigation";
 import { ProfileContext } from "@/context/profile-context";
 import { toast } from "react-toastify";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "../ui/label";
 
 interface IComments {
   userName: string;

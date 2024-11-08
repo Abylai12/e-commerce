@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { IGet } from "@/utils/interface";
 
 type LogInProps = {
   handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => void;

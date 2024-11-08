@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { PriceWithDiscount } from "../../productCard";
 import { ProfileContext } from "@/context/profile-context";
 import { formattedPrice } from "@/lib/utils";
+import Image from "next/image";
 
 const VerifyPackCard = () => {
   const { packList, totalNumber } = useContext(ProfileContext);
@@ -11,7 +12,7 @@ const VerifyPackCard = () => {
       <div className=" flex flex-col gap-4 w-[333px]  p-4">
         {packList?.map(({ quantity, product_id, size }, idx) => (
           <div className="flex gap-3" key={idx}>
-            <img
+            <Image
               src={product_id.images[0]}
               alt="img"
               className="w-[100px] h-[100px] rounded-2xl"

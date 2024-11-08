@@ -1,13 +1,8 @@
 "use client";
 
-import { ProfileContext } from "@/context/profile-context";
-import { apiURL } from "@/utils/apiHome";
 import { Rating } from "@smastrom/react-rating";
-import axios from "axios";
-import { useParams, useSearchParams } from "next/navigation";
-import React, { Dispatch, SetStateAction, useContext, useState } from "react";
-import { toast } from "react-toastify";
-import { number } from "zod";
+
+import React, { Dispatch, SetStateAction } from "react";
 
 interface IComments {
   userName: string;

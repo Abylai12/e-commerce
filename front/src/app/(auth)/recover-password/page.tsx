@@ -1,9 +1,8 @@
 "use client";
 
 import RecoverPass from "@/components/login/recoverPass";
-import { ProfileContext } from "@/context/profile-context";
-import { useSearchParams } from "next/navigation";
-import React, { useContext, useState } from "react";
+
+import React from "react";
 
 const RecoverPassword = () => {
   return (

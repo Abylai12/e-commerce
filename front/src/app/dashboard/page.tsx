@@ -8,7 +8,7 @@ import { ProfileContext } from "@/context/profile-context";
 import { apiURL } from "@/utils/apiHome";
 import { Product } from "@/utils/interface";
 import axios from "axios";
-import Link from "next/link";
+
 import React, { useContext, useEffect, useState } from "react";
 
 const Dashboard = () => {

@@ -67,14 +67,9 @@ export const PackCart = ({ _id, quantity, product_id, size }: IPack) => {
 
         toast.success(message);
       }
-    } catch (error: any) {
-      if (error.response && error.response.status === 400) {
-        const message = error.response.data.message || "Error deleting product";
-        setRefresh((prevRefresh) => !prevRefresh);
-        toast.warning(message);
-      } else {
-        console.error(error);
-      }
+    } catch (error) {
+      setRefresh((prevRefresh) => !prevRefresh);
+      console.error(error);
     }
   };
   const handleSub = () => {

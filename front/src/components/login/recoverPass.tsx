@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import React, { useContext } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { z } from "zod";
@@ -15,21 +16,20 @@ import { formSchema } from "@/utils/validationSchema";
 import { ProfileContext } from "@/context/profile-context";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 
-const form = useForm<z.infer<typeof formSchema>>({
-  resolver: zodResolver(formSchema),
-  defaultValues: {
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    repassword: "",
-    phoneNumber: "",
-    address: "",
-  },
-});
 const RecoverPass = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      repassword: "",
+      phoneNumber: "",
+      address: "",
+    },
+  });
   const { verifyUserPassword } = useContext(ProfileContext);
   const searchParams = useSearchParams();
   const resetToken = searchParams.get("resetToken");

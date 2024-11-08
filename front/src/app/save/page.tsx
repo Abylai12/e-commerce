@@ -1,17 +1,12 @@
 "use client";
 
-import {
-  PriceWithDiscount,
-  SaveListCart,
-} from "@/components/cards/productCard";
+import { SaveListCart } from "@/components/cards/productCard";
 import { ProfileContext } from "@/context/profile-context";
-import { useRouter } from "next/navigation";
-import React, { useContext, useEffect } from "react";
+
+import React, { useContext } from "react";
 
 const SaveList = () => {
-  const { saveList, setSaveList, user, refresh } = useContext(ProfileContext);
-  const router = useRouter();
-  useEffect(() => {}, [refresh]);
+  const { saveList } = useContext(ProfileContext);
 
   return (
     <div className="bg-gray-200 flex gap-5 flex-col items-center py-[56px] justify-center">

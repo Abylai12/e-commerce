@@ -22,12 +22,10 @@ const Header = () => {
   const {
     user,
     setSearch,
-    productId,
     saveList,
     setSaveList,
     setPackList,
     packList,
-    setRefresh,
     setTotalNumber,
     refresh,
     localProducts,

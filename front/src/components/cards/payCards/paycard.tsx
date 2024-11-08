@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 const PayCard = ({
@@ -33,7 +34,7 @@ const PayCard = ({
       <h1 className="font-bold text-xl">3. Төлбөр төлөх</h1>
       <div className="flex flex-col items-center gap-3">
         <p>{formatTime(countDown)}</p>
-        <img src="/images/qpay.svg" alt="QPay logo" />
+        <Image src="/images/qpay.svg" alt="QPay logo" />
         <p>Төлөх боломжтой банкууд</p>
       </div>
       <Button onClick={handleClick}>Буцах</Button>

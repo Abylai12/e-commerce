@@ -4,12 +4,8 @@ import axios from "axios";
 import { apiURL } from "@/utils/apiHome";
 import { useParams } from "next/navigation";
 import { IProduct, Product } from "@/utils/interface";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { PriceWithDiscount, ProductCard } from "@/components/cards/productCard";
 import DetailCart from "@/components/detail/detailCart";
-import { Rating } from "@smastrom/react-rating";
-import { RateComment } from "@/components/detail/rating";
+import { ProductCard } from "@/components/cards/productCard";
 
 const ProductDetailPage = () => {
   const [detail, setDetail] = useState<IProduct[] | null>(null);

@@ -181,6 +181,7 @@ const UserInfoForm = () => {
                       <FormControl>
                         <Input
                           type="file"
+                          {...field}
                           accept="image/*"
                           onChange={(e) =>
                             e.target.files &&

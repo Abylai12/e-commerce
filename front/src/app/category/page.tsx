@@ -23,7 +23,7 @@ const Dashboard = () => {
         size,
       });
       if (res.status === 200) {
-        const { products, lastProduct } = res.data;
+        const { products } = res.data;
         setProducts(products);
       }
     } catch (error) {

@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useContext } from "react";
 import { toast } from "react-toastify";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 const getDiscountedPrice = (price: number, discount: number) => {
   return price - (price * discount) / 100;
@@ -56,7 +57,7 @@ export const ProductCard = ({
     <div>
       <div className={`relative`}>
         <Link href={"/detail/" + _id + "?cat_id=" + category}>
-          <img
+          <Image
             src={images[0]}
             alt="image1"
             className="rounded-lg h-full w-full"
@@ -91,7 +92,7 @@ export const FeaturedProductCard = ({
       <Link href={"/detail/" + _id + "?" + category}>
         <div className="col-span-2 row-span-10 mb-14">
           <div className="relative  ">
-            <img
+            <Image
               src={images[0]}
               alt="image1"
               className="rounded-lg -z-10 object-cover w-full h-[450px] "
@@ -174,7 +175,7 @@ export const SaveListCart = ({
   };
   return (
     <div className="w-[622px] h-[132px] bg-white rounded-2xl p-4 flex items-center gap-6 relative">
-      <img
+      <Image
         src={images[0]}
         alt="img"
         className="w-[100px] h-[100px] rounded-2xl"

@@ -44,11 +44,11 @@ export type IProduct = {
 };
 
 export interface IUser {
-  firstName: String;
-  lastName: String;
+  firstName: string;
+  lastName: string;
   email: string;
-  password: String;
-  repassword: String;
+  password: string;
+  repassword: string;
 }
 
 export interface ILoggedUser {
