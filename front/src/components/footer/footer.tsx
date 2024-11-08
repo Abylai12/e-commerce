@@ -15,7 +15,7 @@ const Footer = () => {
   return (
     <section className="bg-black py-12 px-[200px]">
       <div className="flex justify-between items-center">
-        <Image src="./Vector.svg" alt="img" />
+        <img src="./Vector.svg" alt="img" />
         <div className="flex gap-10">
           <div className="text-white flex items-center gap-5">
             <div className="w-12 h-12 border border-slate-500  rounded-full flex items-center justify-center">

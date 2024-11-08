@@ -26,6 +26,10 @@ export const ProductCard = ({
   const { setProductId, setRefresh } = useContext(ProfileContext);
   const createSaveProduct = async (product_id: string) => {
     const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Нэвтэрнэ үү");
+      return;
+    }
     try {
       const res = await axios.post(
         `${apiURL}save/product`,
@@ -57,7 +61,9 @@ export const ProductCard = ({
     <div>
       <div className={`relative`}>
         <Link href={"/detail/" + _id + "?cat_id=" + category}>
-          <img
+          <Image
+            width={200}
+            height={270}
             src={images[0]}
             alt="image1"
             className="rounded-lg h-full w-full"
@@ -92,8 +98,10 @@ export const FeaturedProductCard = ({
       <Link href={"/detail/" + _id + "?" + category}>
         <div className="col-span-2 row-span-10 mb-14">
           <div className="relative  ">
-            <img
-              src={images[0]}
+            <Image
+              width={1500}
+              height={450}
+              src={images[0] ?? "/images/jersey.png"}
               alt="image1"
               className="rounded-lg -z-10 object-cover w-full h-[450px] "
             />
