@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 
 import { Search } from "lucide-react";
 import { Heart } from "lucide-react";
@@ -12,7 +12,6 @@ import { DropdownMenuDemo } from "./dropdown";
 import Link from "next/link";
 import axios from "axios";
 import { apiURL } from "@/utils/apiHome";
-import { ISaveProduct } from "../detail/detailCart";
 
 // type ListSave = {
 //   product_id: string;

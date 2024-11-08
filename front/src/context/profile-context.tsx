@@ -6,7 +6,6 @@ import axios from "axios";
 import { Id, toast } from "react-toastify";
 import { apiURL } from "@/utils/apiHome";
 import { useState } from "react";
-import { headers } from "next/headers";
 import { ILoggedUser, IPack, ISave, IUser } from "@/utils/interface";
 import { ISaveProduct } from "@/components/detail/detailCart";
 
@@ -40,10 +39,10 @@ interface ProfileContextType {
   refresh: boolean;
 }
 export const ProfileContext = createContext<ProfileContextType>({
-  handleLogForm: (e: React.ChangeEvent<HTMLInputElement>) => {},
+  handleLogForm: () => {},
   logInUser: () => {},
   verifyUserEmail: () => {},
-  verifyUserOtp: async (otp: string) => {},
+  verifyUserOtp: async () => {},
   getCurrentUser: () => {},
   setSearch: () => {},
   setRefresh: () => {},
@@ -53,7 +52,7 @@ export const ProfileContext = createContext<ProfileContextType>({
   setProductId: () => {},
   setTotalNumber: () => {},
   setLocalProducts: () => {},
-  verifyUserPassword: async (resetToken: string | null, formValues: IUser) => {
+  verifyUserPassword: async (resetToken: string | null) => {
     if (!resetToken) {
       return toast.warning("password don't match");
     }
@@ -117,7 +116,7 @@ export const ProfileProvider = ({
         toast.warning("Бүртгэлтэй хэрэглэгч байна!");
       }
       if (res.status === 200) {
-        const { token, user } = res.data;
+        const { token } = res.data;
         localStorage.setItem("token", token);
         setRefresh((prevRefresh) => !prevRefresh);
         setToken(token);
