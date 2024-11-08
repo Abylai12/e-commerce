@@ -92,7 +92,7 @@ export const FeaturedProductCard = ({
       <Link href={"/detail/" + _id + "?" + category}>
         <div className="col-span-2 row-span-10 mb-14">
           <div className="relative  ">
-            <Image
+            <img
               src={images[0]}
               alt="image1"
               className="rounded-lg -z-10 object-cover w-full h-[450px] "
