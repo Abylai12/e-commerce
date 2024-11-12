@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 import { Twitter } from "lucide-react";
-import Image from "next/image";
+// import Image from "next/image";
 
 const Footer = () => {
   return (
