@@ -10,7 +10,6 @@ import { Button } from "../ui/button";
 import { ProfileContext } from "@/context/profile-context";
 import { useContext } from "react";
 import Loader from "../loader/loader";
-import Image from "next/image";
 
 // type OtpProps = {
 //   email: string;
@@ -42,7 +41,7 @@ const VerifyOtp = () => {
     <div className="flex flex-col items-center justify-center gap-6">
       {!isLoading ? (
         <>
-          <Image src="./email.svg" alt="img" />
+          <img src="./email.svg" alt="img" />
           <h1>Баталгаажуулах</h1>
           <p>
             <span>{userForm.email}</span> хаягт илгээсэн баталгаажуулах кодыг

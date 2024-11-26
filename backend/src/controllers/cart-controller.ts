@@ -68,7 +68,7 @@ export const getPackCart = async (req: Request, res: Response) => {
 export const updateCartProduct = async (req: Request, res: Response) => {
   const { id } = req.user;
   const { cart_id, sizeUpdate, count } = req.body;
-  console.log(cart_id, sizeUpdate, count);
+
   try {
     const findSave = await PackProduct.findOne({ user_id: id });
     if (!findSave) {
@@ -91,13 +91,12 @@ export const updateCartProduct = async (req: Request, res: Response) => {
       });
       return;
     }
-    console.log("findIndex", findIndex);
+
     const pro_id = products[findIndex].product_id;
     const checkProArr = products.filter((item) => {
       return item.product_id.toString() === pro_id.toString();
     });
-    console.log("products", products);
-    console.log("prrArr", checkProArr);
+
     if (checkProArr.length === 0) {
       products[findIndex].size = sizeUpdate;
       products[findIndex].quantity = count;
@@ -120,8 +119,6 @@ export const updateCartProduct = async (req: Request, res: Response) => {
       return;
     }
 
-    console.log("idx", idx);
-
     products[idx].quantity += count;
     products.splice(findIndex, 1);
     await findSave.save();
@@ -134,7 +131,7 @@ export const updateCartProduct = async (req: Request, res: Response) => {
 export const deleteCartProduct = async (req: Request, res: Response) => {
   const { id } = req.user;
   const { cart_id } = req.params;
-  console.log(cart_id);
+
   try {
     const findSave = await PackProduct.findOne({ user_id: id });
     if (!findSave) {

@@ -77,7 +77,7 @@ const UserInfoForm = () => {
       return;
     }
     try {
-      const res = await axios.put(`${apiURL}/update/profile`, values, {
+      const res = await axios.put(`${apiURL}update/profile`, values, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

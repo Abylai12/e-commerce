@@ -149,7 +149,7 @@ export const ProfileProvider = ({
     const { email } = userForm;
     try {
       setIsLoading(true);
-      const res = await axios.post(`${apiURL}/auth/verify/email`, { email });
+      const res = await axios.post(`${apiURL}auth/verify/email`, { email });
       if (res.status === 400) {
         return toast.error("Бүртгэлгүй хэрэглэгч бна");
       }
@@ -168,7 +168,7 @@ export const ProfileProvider = ({
     try {
       setIsLoading(true);
       const { email } = userForm;
-      const res = await axios.post(`${apiURL}/auth/verify/otp`, { otp, email });
+      const res = await axios.post(`${apiURL}auth/verify/otp`, { otp, email });
       if (res.status === 400) {
         setIsLoading(false);
         toast.warning(
@@ -196,7 +196,7 @@ export const ProfileProvider = ({
       if (password !== repassword) {
         return toast.warning("password don't match");
       }
-      const res = await axios.post(`${apiURL}/auth/verify/password`, {
+      const res = await axios.post(`${apiURL}auth/verify/password`, {
         password,
         resetToken,
       });

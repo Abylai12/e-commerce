@@ -8,7 +8,6 @@ export const createCategory = async (req: Request, res: Response) => {
       return res.status(400).json({ message: " Хоосон утга байж болохгүй" });
     }
     const category = await Category.create({ name, description });
-    console.log("category", name);
 
     res.status(200).json({ message: "success", category });
   } catch (error) {

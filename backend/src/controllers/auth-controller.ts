@@ -7,7 +7,7 @@ import crypto from "crypto";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log("first", email, password);
+
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -158,7 +158,6 @@ export const verifyUserPassword = async (req: Request, res: Response) => {
       passwordResetToken: hashedResetToken,
       passwordResetTokenExpire: { $gt: Date.now() },
     });
-    console.log("user", findUser);
 
     if (!findUser) {
       return res
