@@ -13,6 +13,8 @@ const VerifyPackCard = () => {
         {packList?.map(({ quantity, product_id, size }, idx) => (
           <div className="flex gap-3" key={idx}>
             <Image
+              width={100}
+              height={100}
               src={product_id.images[0]}
               alt="img"
               className="w-[100px] h-[100px] rounded-2xl"

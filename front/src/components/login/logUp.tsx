@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import {
@@ -22,16 +22,22 @@ import { apiURL } from "@/utils/apiHome";
 import { useRouter } from "next/navigation";
 
 export const LogUp = () => {
+  const [isLoading, setIsLoading] = useState(false); // For tracking request status
   const router = useRouter();
+
   const logUpUser = async (zodValue: IUser) => {
+    setIsLoading(true); // Start loading state
     try {
       const { firstName, lastName, repassword, email, password } = zodValue;
+
       if (password !== repassword) {
-        return toast.error("Нууц үг хоорондоо нийцэхгүй байна");
+        toast.error("Нууц үг хоорондоо нийцэхгүй байна");
+        setIsLoading(false); // Stop loading
+        return;
       }
 
       const newForm = { email, password, firstName, lastName };
-      const res = await axios.post(`${apiURL}/auth/logup`, newForm);
+      const res = await axios.post(`${apiURL}auth/logup`, newForm);
 
       if (res.status === 200) {
         toast.success("Хэрэглэгч амжилттай бүртгэгдлээ");
@@ -39,16 +45,18 @@ export const LogUp = () => {
       } else {
         toast.error("Бүртгэлтэй хэрэглэгч байна!");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("error", error);
-      toast.warning("Failed to sign in. Please try again.");
+      toast.warning("Failed to sign up. Please try again.");
+    } finally {
+      setIsLoading(false); // Stop loading when the request is done
     }
   };
 
-  // 2. Define a submit handler.
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     logUpUser(values);
   };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,10 +65,9 @@ export const LogUp = () => {
       email: "",
       password: "",
       repassword: "",
-      phoneNumber: "",
-      address: "",
     },
   });
+
   return (
     <div className="flex justify-center items-center heightcalc">
       <Form {...form}>
@@ -74,7 +81,7 @@ export const LogUp = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="firstName" {...field} />
+                  <Input placeholder="First Name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -86,7 +93,7 @@ export const LogUp = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="lastName" {...field} />
+                  <Input placeholder="Last Name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -98,7 +105,7 @@ export const LogUp = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="email" {...field} />
+                  <Input placeholder="Email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -110,7 +117,7 @@ export const LogUp = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="password" {...field} type="password" />
+                  <Input placeholder="Password" {...field} type="password" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -122,24 +129,28 @@ export const LogUp = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="repassword" {...field} type="password" />
+                  <Input
+                    placeholder="Confirm Password"
+                    {...field}
+                    type="password"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <ul className="list-disc ml-8 text-xs text-muted-foreground">
-            <li>Том үсэг орсон байх </li>
-            <li>Жижиг үсэг орсон байх </li>
-            <li>Тоо орсон байх</li>
-            <li>Тэмдэгт орсон байх</li>
-          </ul>
-          <Button variant={"myBtn"} type="submit">
-            Үүсгэх
+          {/* Phone and address fields (Optional or to be added later) */}
+          <Button
+            variant={"myBtn"}
+            type="submit"
+            disabled={isLoading} // Disable the button while loading
+            className={isLoading ? "opacity-50 cursor-not-allowed" : ""}
+          >
+            {isLoading ? "Бүртгэж байна..." : "Үүсгэх"}
           </Button>
           <Link
             href="/Login"
-            className={` bg-white flex justify-center text-black  border border-blue-700 rounded-2xl bg-primary w-full py-2 px-4`}
+            className="bg-white flex justify-center text-black border border-blue-700 rounded-2xl bg-primary w-full py-2 px-4"
           >
             Нэвтрэх
           </Link>
@@ -148,47 +159,3 @@ export const LogUp = () => {
     </div>
   );
 };
-
-{
-  /* <div className="flex justify-center items-center w-full heightcalc">
-      <div className="w-[334px] ">
-        <h1 className="text-2xl font-semibold text-center">Нэвтрэх</h1>
-        <div className="flex flex-col gap-4 items-center mb-12 mt-6">
-          <Input placeholder="Овог" name="lastName" onChange={handleLogForm} />
-          <Input placeholder="Нэр" name="firstName" onChange={handleLogForm} />
-          <Input
-            type="email"
-            placeholder="Имейл хаяг"
-            name="email"
-            onChange={handleLogForm}
-          />
-          <Input
-            placeholder="Нууц үг"
-            name="password"
-            onChange={handleLogForm}
-          />
-          <Input
-            placeholder="Нууц үг давтах"
-            name="repassword"
-            onChange={handleLogForm}
-          />
-          <ul className="list-disc">
-            <li>Том үсэг орсон байх </li>
-            <li>Жижиг үсэг орсон байх </li>
-            <li>Тоо орсон байх</li>
-            <li>Тэмдэгт орсон байх</li>
-          </ul>
-          <Button variant={"myBtn"} className="w-full" onClick={handleLogUp}>
-            Үүсгэх
-          </Button>
-        </div>
-
-        <Link
-          href="/Login"
-          className={` bg-white flex justify-center text-black  border border-blue-700 rounded-2xl bg-primary w-full py-2 px-4`}
-        >
-          Нэвтрэх
-        </Link>
-      </div>
-    </div> */
-}

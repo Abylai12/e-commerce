@@ -43,7 +43,6 @@ export const PackCart = ({ _id, quantity, product_id, size }: IPack) => {
       );
       if (res.status === 200) {
         setRefresh((prevRefresh) => !prevRefresh);
-        console.log("success");
       }
     } catch (error) {
       setRefresh((prevRefresh) => !prevRefresh);

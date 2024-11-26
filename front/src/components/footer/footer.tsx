@@ -13,7 +13,7 @@ import { Twitter } from "lucide-react";
 
 const Footer = () => {
   return (
-    <section className="bg-black py-12 px-[200px]">
+    <section className="bg-black py-5 px-[200px]">
       <div className="flex justify-between items-center">
         <img src="./Vector.svg" alt="img" />
         <div className="flex gap-10">

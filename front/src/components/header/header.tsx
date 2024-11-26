@@ -102,7 +102,7 @@ const Header = () => {
         <Link href={user ? "/save" : "/"}>
           <div className="relative">
             <Heart className="text-white" />
-            {!user ? (
+            {!user || !saveList?.length ? (
               <div></div>
             ) : (
               <div className="absolute -top-1/4 -right-1/4 bg-blue-400 rounded-full text-[10px] w-4 h-4 flex items-center justify-center text-white">

@@ -23,6 +23,7 @@ const Login = ({ handleLogForm, handleLogIn }: LogInProps) => {
             onChange={handleLogForm}
           />
           <Input
+            type="password"
             placeholder="Нууц үг"
             name="password"
             onChange={handleLogForm}

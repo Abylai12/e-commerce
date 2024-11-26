@@ -20,11 +20,6 @@ export const formSchema = z.object({
   repassword: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  phoneNumber: z
-    .string()
-    .min(10, { message: "Must be a valid mobile number" })
-    .max(14, { message: "Must be a valid mobile number" }),
-  address: z.string(),
 });
 
 export const userSchema = z.object({

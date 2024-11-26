@@ -93,7 +93,7 @@ const DetailCart = ({
       );
       if (res.status === 200) {
         setRefresh((prevRefresh) => !prevRefresh);
-        toast.success("amjilttai packed");
+        toast.success("Бараа сагслагдлаа");
       }
       if (res.status === 201) {
         toast.success("Аль хэдийн хадгалагдсан бараа байна");
