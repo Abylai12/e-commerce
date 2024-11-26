@@ -13,7 +13,7 @@ const ProductDetailPage = () => {
   const params = useParams();
   const getProductDetail = async () => {
     try {
-      const res = await axios.get(`${apiURL}/get/product/detail/${params.id}`);
+      const res = await axios.get(`${apiURL}get/product/detail/${params.id}`);
       if (res.status === 200) {
         const { productDetail, products } = res.data;
         setDetail(productDetail);
